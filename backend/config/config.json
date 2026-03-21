@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "password123",
+    "database": "game_library",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "password123",
+    "database": "gamelibrary_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "password123",
+    "database": "gamelibrary_prod",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
