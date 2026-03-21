@@ -1,0 +1,136 @@
+import {
+  Box,
+  Button,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
+
+function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
+  const textFieldStyles = {
+    mb: 2,
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#f5f7fa",
+      color: "#111",
+      borderRadius: "10px",
+    },
+    "& .MuiInputLabel-root": {
+      color: "#c7d5e0",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "#66c0f4",
+    },
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        p: 4,
+        background: "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)",
+        borderRadius: "16px",
+        border: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 12px 28px rgba(0,0,0,0.25)",
+      }}
+    >
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: 800 }}>
+        {buttonText === "Lägg till spel" ? "Lägg till spel" : "Redigera spel"}
+      </Typography>
+
+      <TextField
+        fullWidth
+        label="Titel"
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        sx={textFieldStyles}
+      />
+
+      <TextField
+        fullWidth
+        label="Genre"
+        name="genre"
+        value={formData.genre}
+        onChange={handleChange}
+        sx={textFieldStyles}
+      />
+
+      <TextField
+        fullWidth
+        label="Plattform"
+        name="platform"
+        value={formData.platform}
+        onChange={handleChange}
+        sx={textFieldStyles}
+      />
+
+      <TextField
+        fullWidth
+        select
+        label="Status"
+        name="status"
+        value={formData.status}
+        onChange={handleChange}
+        sx={textFieldStyles}
+      >
+        <MenuItem value="Planerar">Planerar</MenuItem>
+        <MenuItem value="Spelar">Spelar</MenuItem>
+        <MenuItem value="Klar">Klar</MenuItem>
+        <MenuItem value="Pausat">Pausat</MenuItem>
+      </TextField>
+
+      <TextField
+        fullWidth
+        label="Releasedatum"
+        name="releaseDate"
+        type="date"
+        value={formData.releaseDate}
+        onChange={handleChange}
+        InputLabelProps={{ shrink: true }}
+        sx={textFieldStyles}
+      />
+
+      <TextField
+        fullWidth
+        label="Bild-URL"
+        name="imageUrl"
+        value={formData.imageUrl}
+        onChange={handleChange}
+        sx={textFieldStyles}
+      />
+
+      <TextField
+        fullWidth
+        label="Beskrivning"
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        multiline
+        rows={5}
+        sx={textFieldStyles}
+      />
+
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{
+          mt: 1,
+          py: 1.5,
+          backgroundColor: "#66c0f4",
+          color: "#0b1a24",
+          fontWeight: 800,
+          borderRadius: "10px",
+          "&:hover": {
+            backgroundColor: "#8fd7ff",
+          },
+        }}
+      >
+        {buttonText}
+      </Button>
+    </Box>
+  );
+}
+
+export default GameForm;
