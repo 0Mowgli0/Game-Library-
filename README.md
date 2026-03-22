@@ -15,7 +15,10 @@ Se till att du har följande installerat innan du kör projektet:
 
 ## 🚀 Kom igång
 
-Glöm inte att clona projektet
+### 1. Klona projektet
+Obs! Glöm inte att Klona projektet. 
+Jag klonar i Github Desktop
+```
 
 ### 2. Skapa databasen i MySQL
 
@@ -36,10 +39,10 @@ Installera dependencies:
 npm install
 ```
 
-Skapa en `.env` fil baserat på `.env.example` 
-Glöm inte att stå i backend när du skapar fil:
+Skapa en `.env` fil baserat på `.env.example`.
+Glöm inte att stå i backend-mappen när du skapar filen:
 ```bash
-cp .env 
+cp  .env
 ```
 
 Öppna `.env` och fyll i dina egna uppgifter:
@@ -80,28 +83,34 @@ Frontend körs nu på `http://localhost:5173`
 
 ---
 
-## 🗄️ Importera exempeldata (valfritt)
+## 🗄️ Importering av befintlig data
 
-Om du vill importera spel som redan finns i projektet, kör följande i MySQL Workbench eller terminalen:
+Om du vill importera spel som redan finns i projektet, kör följande kommando.
+Glöm inte att Byt ut `DITT_LÖSENORD` mot ditt eget MySQL-lösenord:
 ```bash
-mysql -u root -p game_library < backend/posts.sql
+mysql --default-character-set=utf8mb4 -u root -pDITT_LÖSENORD game_library < backend/posts.sql
 ```
 
 ---
 
 ## 📝 Hur du bidrar med ändringar
 
+### Om du ändrat i koden:
+```bash
+git add .
+git commit -m "Beskriv vad du ändrat, t.ex. 'Lade till FIFA 26'"
+git push
+```
 
 ### Om du vill att databasändringarna ska synas för andra:
 
-Exportera databasen från MySQL Workbench:
+Exportera databasen genom att stå i **projektets rotmapp** och köra följande kommando.
+Byt ut `DITT_LÖSENORD` mot ditt eget MySQL-lösenord:
+```bash
+mysqldump --default-character-set=utf8mb4 -u root -pDITT_LÖSENORD game_library > backend/posts.sql
+```
 
-1. Öppna **MySQL Workbench**
-2. Gå till **Server → Data Export**
-3. Välj databasen `game_library`
-4. Välj **Export to Self-Contained File**
-5. Spara filen som `backend/posts.sql`
-6. Pusha filen till GitHub:
+Pusha sedan filen till GitHub:
 ```bash
 git add backend/posts.sql
 git commit -m "Uppdaterade databas med nya spel"
@@ -111,11 +120,10 @@ git push
 ### När någon annan hämtar din kod och vill ha din data:
 ```bash
 git pull
-mysql -u root -p game_library < backend/posts.sql
+mysql --default-character-set=utf8mb4 -u root -pDITT_LÖSENORD game_library < backend/posts.sql
 ```
 
 ---
-
 
 ## ⚠️ Viktigt
 
