@@ -23,9 +23,19 @@ Jag klonar i Github Desktop
 ### 2. Skapa databasen i MySQL
 
 Öppna MySQL Workbench eller din terminal och kör:
+Jag öppnar new Query:
 ```sql
 CREATE DATABASE game_library;
 ```
+
+## 🗄️ Importering av befintlig data
+
+Om du vill importera spel som redan finns i projektet, kör följande kommando.
+```bash
+mysql --default-character-set=utf8mb4 -u root -p game_library < game_library.sql
+```
+skriv in ditt lösenord när de frågar
+
 
 ### 3. Konfigurera backend
 
@@ -42,7 +52,7 @@ npm install
 Skapa en `.env` fil baserat på `.env.example`.
 Glöm inte att stå i backend-mappen när du skapar filen:
 ```bash
-cp  .env
+copy .env.exemple.  .env
 ```
 
 Öppna `.env` och fyll i dina egna uppgifter:
@@ -83,15 +93,6 @@ Frontend körs nu på `http://localhost:5173`
 
 ---
 
-## 🗄️ Importering av befintlig data
-
-Om du vill importera spel som redan finns i projektet, kör följande kommando.
-Glöm inte att Byt ut `DITT_LÖSENORD` mot ditt eget MySQL-lösenord:
-```bash
-mysql --default-character-set=utf8mb4 -u root -pDITT_LÖSENORD game_library < backend/posts.sql
-```
-
----
 
 ## 📝 Hur du bidrar med ändringar
 
@@ -107,20 +108,7 @@ git push
 Exportera databasen genom att stå i **projektets rotmapp** och köra följande kommando.
 Byt ut `DITT_LÖSENORD` mot ditt eget MySQL-lösenord:
 ```bash
-mysqldump --default-character-set=utf8mb4 -u root -pDITT_LÖSENORD game_library > backend/posts.sql
-```
-
-Pusha sedan filen till GitHub:
-```bash
-git add backend/posts.sql
-git commit -m "Uppdaterade databas med nya spel"
-git push
-```
-
-### När någon annan hämtar din kod och vill ha din data:
-```bash
-git pull
-mysql --default-character-set=utf8mb4 -u root -pDITT_LÖSENORD game_library < backend/posts.sql
+mysqldump --default-character-set=utf8mb4 -u root -p game_library > game_library.sql
 ```
 
 ---
