@@ -4,12 +4,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    platform: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    platformId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
-    genre: {
-      type: DataTypes.STRING,
+    genreId: {
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     status: {

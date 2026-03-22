@@ -44,12 +44,12 @@ function GameCard({ game }) {
 
         <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: "wrap" }}>
           <Chip
-            label={game.genre || "Okänd genre"}
+            label={game.Genre?.name || game.genre || "Okänd genre"}
             size="small"
             sx={{ backgroundColor: "#66c0f4", color: "#0b1a24", fontWeight: 700 }}
           />
           <Chip
-            label={game.platform || "Okänd plattform"}
+            label={game.Platform?.name || game.platform || "Okänd plattform"}
             size="small"
             sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
           />

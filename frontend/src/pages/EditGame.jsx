@@ -14,8 +14,8 @@ function EditGame() {
 
   const [formData, setFormData] = useState({
     title: "",
-    genre: "",
-    platform: "",
+    genreId: "",
+    platformId: "",
     status: "Planerar",
     releaseDate: "",
     image: "",
@@ -35,8 +35,8 @@ function EditGame() {
 
         setFormData({
           title: game.title || "",
-          genre: game.genre || "",
-          platform: game.platform || "",
+          genreId: game.genreId || "",
+          platformId: game.platformId || "",
           status: game.status || "Planerar",
           releaseDate: game.releaseDate ? game.releaseDate.split("T")[0] : "",
           image: game.image || "",
@@ -99,7 +99,6 @@ function EditGame() {
         buttonText="Uppdatera spel"
       />
 
-      {/* Ta bort-knapp */}
       <Button
         fullWidth
         variant="outlined"
@@ -121,7 +120,6 @@ function EditGame() {
         Ta bort spel
       </Button>
 
-      {/* Bekräftelsedialog */}
       <Dialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}

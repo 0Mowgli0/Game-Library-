@@ -91,7 +91,7 @@ function StatusPage() {
                     {game.title}
                   </Typography>
                   <Chip
-                    label={game.genre || "Okänd genre"}
+                    label={game.Genre?.name || game.genre || "Okänd genre"}
                     size="small"
                     sx={{ backgroundColor: "#66c0f4", color: "#0b1a24", fontWeight: 700, mb: 2 }}
                   />

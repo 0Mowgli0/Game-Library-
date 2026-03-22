@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -6,8 +7,33 @@ import {
   Typography,
   Rating,
 } from "@mui/material";
+import gameService from "../../services/gameService";
 
 function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
+  const [platforms, setPlatforms] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [loadingOptions, setLoadingOptions] = useState(true);
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [platformRes, genreRes] = await Promise.all([
+          gameService.getAllPlatforms(),
+          gameService.getAllGenres(),
+        ]);
+        setPlatforms(platformRes.data);
+        setGenres(genreRes.data);
+      } catch (err) {
+        console.error("Kunde inte hämta plattformar/genres", err);
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+    fetchOptions();
+  }, []);
+
+  if (loadingOptions) return null;
+
   const textFieldStyles = {
     mb: 2,
     "& .MuiOutlinedInput-root": {
@@ -50,21 +76,37 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
 
       <TextField
         fullWidth
+        select
         label="Genre"
-        name="genre"
-        value={formData.genre}
+        name="genreId"
+        value={formData.genreId || ""}
         onChange={handleChange}
         sx={textFieldStyles}
-      />
+      >
+        <MenuItem value="">Välj genre</MenuItem>
+        {genres.map((g) => (
+          <MenuItem key={g.id} value={g.id}>
+            {g.name}
+          </MenuItem>
+        ))}
+      </TextField>
 
       <TextField
         fullWidth
+        select
         label="Plattform"
-        name="platform"
-        value={formData.platform}
+        name="platformId"
+        value={formData.platformId || ""}
         onChange={handleChange}
         sx={textFieldStyles}
-      />
+      >
+        <MenuItem value="">Välj plattform</MenuItem>
+        {platforms.map((p) => (
+          <MenuItem key={p.id} value={p.id}>
+            {p.name}
+          </MenuItem>
+        ))}
+      </TextField>
 
       <TextField
         fullWidth
@@ -115,14 +157,16 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
       {formData.status === "Klar" && (
         <Box sx={{ mb: 3 }}>
           <Typography sx={{ color: "#c7d5e0", mb: 1 }}>Betyg</Typography>
-          <Box sx={{
-            display: "inline-block",
-            backgroundColor: "rgba(255,255,255,0.15)",
-            border: "1px solid rgba(255,255,255,0.25)",
-            borderRadius: "8px",
-            px: 1.5,
-            py: 0.5,
-          }}>
+          <Box
+            sx={{
+              display: "inline-block",
+              backgroundColor: "rgba(255,255,255,0.15)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              borderRadius: "8px",
+              px: 1.5,
+              py: 0.5,
+            }}
+          >
             <Rating
               name="rating"
               value={Number(formData.rating) || 0}

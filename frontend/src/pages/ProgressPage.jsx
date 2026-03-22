@@ -64,7 +64,7 @@ function ProgressPage() {
   }));
 
   const genreCount = games.reduce((acc, g) => {
-    const genre = g.genre?.trim() || "Okänd";
+    const genre = g.Genre?.name || g.genre?.trim() || "Okänd";
     acc[genre] = (acc[genre] || 0) + 1;
     return acc;
   }, {});

@@ -3,9 +3,9 @@ const cors = require("cors");
 const { sequelize } = require("./models");
 
 const gamesRoute = require("./routes/gamesRoute");
-const postsRoute = require("./routes/postsRoute");
-const tagsRoute = require("./routes/tagsRoute");
-const usersRoute = require("./routes/usersRoute");
+const platformsRoute = require("./routes/platformsRoute");
+const genresRoute = require("./routes/genresRoute");
+const reviewsRoute = require("./routes/reviewsRoute");
 
 const app = express();
 
@@ -13,9 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/games", gamesRoute);
-app.use("/api/posts", postsRoute);
-app.use("/api/tags", tagsRoute);
-app.use("/api/users", usersRoute);
+app.use("/api/platforms", platformsRoute);
+app.use("/api/genres", genresRoute);
+app.use("/api/reviews", reviewsRoute);
 
 app.get("/", (req, res) => {
   res.send("API is running");
@@ -24,6 +24,6 @@ app.get("/", (req, res) => {
 const PORT = 5000;
 
 app.listen(PORT, async () => {
-  await sequelize.sync();
+  await sequelize.sync({ alter: true });
   console.log(`Server running on http://localhost:${PORT}`);
 });
