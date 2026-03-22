@@ -155,3 +155,5 @@ Om databasen också uppdaterats, importera den igen med kommandot i steg 3.
 
 - Pusha **aldrig** `.env`-filen till GitHub — den innehåller ditt lösenord
 - `.env.example` ska alltid vara uppdaterad med rätt variabelnamn men utan riktiga värden
+
+//
