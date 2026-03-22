@@ -94,8 +94,8 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
       <TextField
         fullWidth
         label="Bild-URL"
-        name="imageUrl"
-        value={formData.imageUrl}
+        name="image"
+        value={formData.image}
         onChange={handleChange}
         sx={textFieldStyles}
       />

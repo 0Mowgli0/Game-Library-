@@ -5,6 +5,8 @@ import Games from "./pages/Games";
 import GameDetail from "./pages/GameDetail";
 import AddGame from "./pages/AddGame";
 import EditGame from "./pages/EditGame";
+import StatusPage from "./pages/StatusPage";
+import ProgressPage from "./pages/ProgressPage";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/games/:id" element={<GameDetail />} />
         <Route path="/games/add" element={<AddGame />} />
         <Route path="/games/edit/:id" element={<EditGame />} />
+        <Route path="/status" element={<StatusPage />} />
+        <Route path="/progress" element={<ProgressPage />} />
       </Routes>
     </>
   );

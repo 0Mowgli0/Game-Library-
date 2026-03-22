@@ -54,8 +54,7 @@ function GameDetail() {
   }
 
   const imageSrc =
-    game.imageUrl ||
-    game.image_url ||
+    game.image ||
     "https://placehold.co/1000x500?text=Game";
 
   return (

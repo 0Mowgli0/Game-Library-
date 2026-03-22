@@ -32,7 +32,7 @@ function GameCard({ game }) {
       <CardMedia
         component="img"
         height="200"
-        image={game.imageUrl || "https://placehold.co/600x400?text=Game"}
+        image={game.image || "https://placehold.co/600x400?text=Game"}
         alt={game.title}
       />
 

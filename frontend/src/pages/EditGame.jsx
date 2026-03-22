@@ -16,7 +16,7 @@ function EditGame() {
     platform: "",
     status: "Planerar",
     releaseDate: "",
-    imageUrl: "",
+    image: "",
     description: "",
   });
 
@@ -35,7 +35,7 @@ function EditGame() {
           platform: game.platform || "",
           status: game.status || "Planerar",
           releaseDate: game.releaseDate ? game.releaseDate.split("T")[0] : "",
-          imageUrl: game.imageUrl || "",
+          image: game.image || "",
           description: game.description || "",
         });
       } catch (err) {
