@@ -9,37 +9,67 @@ Ett personligt spelbibliotek där du kan samla, organisera och hålla koll på d
 Se till att du har följande installerat innan du kör projektet:
 
 - [Node.js](https://nodejs.org/) (v18 eller senare)
-- [MySQL](https://www.mysql.com/)
+- [MySQL](https://www.mysql.com/) — installera MySQL Server + MySQL Workbench
+- [Git](https://git-scm.com/) eller [GitHub Desktop](https://desktop.github.com/)
 
 ---
 
 ## 🚀 Kom igång
 
 ### 1. Klona projektet
-Obs! Glöm inte att Klona projektet. 
-Jag klonar i Github Desktop
+
+Klona projektet via GitHub Desktop eller terminalen:
+```bash
+git clone https://github.com/DITT_ANVÄNDARNAMN/DITT_REPO.git
 ```
 
 ### 2. Skapa databasen i MySQL
 
-Öppna MySQL Workbench eller din terminal och kör:
-Jag öppnar new Query:
+Öppna MySQL Workbench, skapa en ny Query och kör:
 ```sql
 CREATE DATABASE game_library;
 ```
 
-## 🗄️ Importering av befintlig data
+### 3. Skapa en .env fil 
+Skapa en `.env` fil baserat på `.env.example`.
 
-Om du vill importera spel som redan finns i projektet, kör följande kommando.
+**Windows:**
+```bash
+copy .env.example .env
+```
+
+**Mac/Linux:**
+```bash
+cp .env.example .env
+```
+
+Öppna `.env` och fyll i dina egna uppgifter:
+```
+DB_USERNAME=root
+DB_PASSWORD=ditt_mysql_lösenord
+DB_DATABASE=game_library
+DB_HOST=127.0.0.1
+```
+
+### 4. Importera befintlig data
+
+Öppna terminalen och se till att du står i **projektets rotmapp**.
+
+**Om du använder PowerShell (Windows):**
+```bash
+cmd /c '"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql" --default-character-set=utf8mb4 -u root -p game_library < game_library.sql'
+```
+
+**Om du använder Mac/Linux:**
 ```bash
 mysql --default-character-set=utf8mb4 -u root -p game_library < game_library.sql
 ```
-skriv in ditt lösenord när de frågar
 
+Skriv in ditt MySQL-lösenord när det frågas.
 
-### 3. Konfigurera backend
+### 5. Konfigurera backend
 
-Gå in i backend-mappen:
+Öppna en terminal och gå in i backend-mappen:
 ```bash
 cd backend
 ```
@@ -49,18 +79,9 @@ Installera dependencies:
 npm install
 ```
 
-Skapa en `.env` fil baserat på `.env.example`.
-Glöm inte att stå i backend-mappen när du skapar filen:
+Installera dotenv:
 ```bash
-copy .env.exemple.  .env
-```
-
-Öppna `.env` och fyll i dina egna uppgifter:
-```
-DB_USERNAME=root
-DB_PASSWORD=ditt_mysql_lösenord
-DB_DATABASE=game_library
-DB_HOST=127.0.0.1
+npm install dotenv
 ```
 
 Starta backend:
@@ -72,9 +93,9 @@ Backend körs nu på `http://localhost:5000`
 
 ---
 
-### 4. Konfigurera frontend
+### 6. Konfigurera frontend
 
-Öppna en ny terminal och gå in i frontend-mappen:
+Öppna en **ny terminal** och gå in i frontend-mappen:
 ```bash
 cd frontend
 ```
@@ -93,7 +114,6 @@ Frontend körs nu på `http://localhost:5173`
 
 ---
 
-
 ## 📝 Hur du bidrar med ändringar
 
 ### Om du ändrat i koden:
@@ -103,13 +123,33 @@ git commit -m "Beskriv vad du ändrat, t.ex. 'Lade till FIFA 26'"
 git push
 ```
 
-### Om du vill att databasändringarna ska synas för andra:
+### Om du lagt till/ändrat/tagit bort spel och vill att andra ska se det:
 
-Exportera databasen genom att stå i **projektets rotmapp** och köra följande kommando.
-Byt ut `DITT_LÖSENORD` mot ditt eget MySQL-lösenord:
+Exportera databasen genom att stå i **projektets rotmapp**.
+
+**Windows (PowerShell):**
+```bash
+mysqldump --default-character-set=utf8mb4 -u root -p game_library | Out-File -Encoding utf8 game_library.sql
+```
+
+**Mac/Linux:**
 ```bash
 mysqldump --default-character-set=utf8mb4 -u root -p game_library > game_library.sql
 ```
+
+Pusha sedan filen till GitHub:
+```bash
+git add game_library.sql
+git commit -m "Uppdaterade databas med nya spel"
+git push
+```
+
+### När du hämtar någon annans ändringar:
+```bash
+git pull
+```
+
+Om databasen också uppdaterats, importera den igen med kommandot i steg 3.
 
 ---
 
@@ -117,3 +157,7 @@ mysqldump --default-character-set=utf8mb4 -u root -p game_library > game_library
 
 - Pusha **aldrig** `.env`-filen till GitHub — den innehåller ditt lösenord
 - `.env.example` ska alltid vara uppdaterad med rätt variabelnamn men utan riktiga värden
+- Om `mysql` inte känns igen i PowerShell, lägg till MySQL i PATH:
+```bash
+$env:Path += ";C:\Program Files\MySQL\MySQL Server 8.0\bin"
+```
