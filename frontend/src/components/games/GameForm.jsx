@@ -4,6 +4,7 @@ import {
   MenuItem,
   TextField,
   Typography,
+  Rating,
 } from "@mui/material";
 
 function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
@@ -110,6 +111,29 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
         rows={5}
         sx={textFieldStyles}
       />
+
+      {formData.status === "Klar" && (
+        <Box sx={{ mb: 3 }}>
+          <Typography sx={{ color: "#c7d5e0", mb: 1 }}>Betyg</Typography>
+          <Box sx={{
+            display: "inline-block",
+            backgroundColor: "rgba(255,255,255,0.15)",
+            border: "1px solid rgba(255,255,255,0.25)",
+            borderRadius: "8px",
+            px: 1.5,
+            py: 0.5,
+          }}>
+            <Rating
+              name="rating"
+              value={Number(formData.rating) || 0}
+              onChange={(_, newValue) =>
+                handleChange({ target: { name: "rating", value: newValue } })
+              }
+              sx={{ color: "#66c0f4" }}
+            />
+          </Box>
+        </Box>
+      )}
 
       <Button
         type="submit"

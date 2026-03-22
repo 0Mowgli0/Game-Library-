@@ -7,6 +7,7 @@ import {
   Stack,
   Chip,
   Box,
+  Rating,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -45,21 +46,32 @@ function GameCard({ game }) {
           <Chip
             label={game.genre || "Okänd genre"}
             size="small"
-            sx={{
-              backgroundColor: "#66c0f4",
-              color: "#0b1a24",
-              fontWeight: 700,
-            }}
+            sx={{ backgroundColor: "#66c0f4", color: "#0b1a24", fontWeight: 700 }}
           />
           <Chip
             label={game.platform || "Okänd plattform"}
             size="small"
-            sx={{
-              backgroundColor: "#2a475e",
-              color: "#c7d5e0",
-            }}
+            sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
           />
         </Stack>
+
+        {game.status === "Klar" && game.rating && (
+          <Box sx={{
+            display: "inline-block",
+            backgroundColor: "rgba(255,255,255,0.08)",
+            borderRadius: "8px",
+            px: 1.5,
+            py: 0.5,
+            mb: 1,
+          }}>
+            <Rating
+              value={game.rating}
+              readOnly
+              size="small"
+              sx={{ color: "#66c0f4" }}
+            />
+          </Box>
+        )}
 
         <Box sx={{ minHeight: 48 }}>
           <Typography variant="body2" sx={{ color: "#c7d5e0" }}>
@@ -78,9 +90,7 @@ function GameCard({ game }) {
               backgroundColor: "#66c0f4",
               color: "#0b1a24",
               fontWeight: 700,
-              "&:hover": {
-                backgroundColor: "#8fd7ff",
-              },
+              "&:hover": { backgroundColor: "#8fd7ff" },
             }}
           >
             Läs mer
@@ -93,10 +103,7 @@ function GameCard({ game }) {
             sx={{
               color: "#c7d5e0",
               borderColor: "rgba(255,255,255,0.2)",
-              "&:hover": {
-                borderColor: "#66c0f4",
-                color: "#66c0f4",
-              },
+              "&:hover": { borderColor: "#66c0f4", color: "#66c0f4" },
             }}
           >
             Redigera

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Box, Button, Chip, Stack, Typography } from "@mui/material";
+import { Box, Button, Chip, Stack, Typography, Rating } from "@mui/material";
 import PageContainer from "../components/layout/PageContainer";
 import Loading from "../components/common/Loading";
 import ErrorMessage from "../components/common/ErrorMessage";
@@ -16,10 +16,8 @@ function GameDetail() {
     const fetchGame = async () => {
       try {
         const response = await gameService.getGameById(id);
-        console.log("Game från backend:", response.data);
         setGame(response.data);
       } catch (err) {
-        console.error("Fel vid hämtning av spel:", err);
         setError("Kunde inte hämta spelet.");
       } finally {
         setLoading(false);
@@ -29,33 +27,11 @@ function GameDetail() {
     fetchGame();
   }, [id]);
 
-  if (loading) {
-    return (
-      <PageContainer>
-        <Loading />
-      </PageContainer>
-    );
-  }
+  if (loading) return <PageContainer><Loading /></PageContainer>;
+  if (error) return <PageContainer><ErrorMessage message={error} /></PageContainer>;
+  if (!game) return <PageContainer><ErrorMessage message="Spelet hittades inte." /></PageContainer>;
 
-  if (error) {
-    return (
-      <PageContainer>
-        <ErrorMessage message={error} />
-      </PageContainer>
-    );
-  }
-
-  if (!game) {
-    return (
-      <PageContainer>
-        <ErrorMessage message="Spelet hittades inte." />
-      </PageContainer>
-    );
-  }
-
-  const imageSrc =
-    game.image ||
-    "https://placehold.co/1000x500?text=Game";
+  const imageSrc = game.image || "https://placehold.co/1000x500?text=Game";
 
   return (
     <PageContainer>
@@ -73,7 +49,6 @@ function GameDetail() {
           src={imageSrc}
           alt={game.title}
           onError={(e) => {
-            console.log("Bild kunde inte laddas:", imageSrc);
             e.target.src = "https://placehold.co/1000x500?text=Game";
           }}
           sx={{
@@ -93,32 +68,34 @@ function GameDetail() {
         <Stack direction="row" spacing={1} sx={{ mb: 3, flexWrap: "wrap" }}>
           <Chip
             label={game.genre || "Okänd genre"}
-            sx={{
-              backgroundColor: "#66c0f4",
-              color: "#0b1a24",
-              fontWeight: 700,
-            }}
+            sx={{ backgroundColor: "#66c0f4", color: "#0b1a24", fontWeight: 700 }}
           />
           <Chip
             label={game.platform || "Okänd plattform"}
-            sx={{
-              backgroundColor: "#2a475e",
-              color: "#c7d5e0",
-            }}
+            sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
           />
           <Chip
             label={game.status || "Okänd status"}
-            sx={{
-              backgroundColor: "#2a475e",
-              color: "#c7d5e0",
-            }}
+            sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
           />
         </Stack>
 
-        <Typography
-          variant="body1"
-          sx={{ color: "#c7d5e0", lineHeight: 1.8, mb: 3 }}
-        >
+        {game.status === "Klar" && game.rating && (
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ color: "#8fa7ba", mb: 0.5 }}>Betyg</Typography>
+            <Box sx={{
+              display: "inline-block",
+              backgroundColor: "rgba(255,255,255,0.08)",
+              borderRadius: "8px",
+              px: 1.5,
+              py: 0.5,
+            }}>
+              <Rating value={game.rating} readOnly sx={{ color: "#66c0f4" }} />
+            </Box>
+          </Box>
+        )}
+
+        <Typography variant="body1" sx={{ color: "#c7d5e0", lineHeight: 1.8, mb: 3 }}>
           {game.description || "Ingen beskrivning tillagd."}
         </Typography>
 
@@ -144,10 +121,7 @@ function GameDetail() {
             sx={{
               color: "#c7d5e0",
               borderColor: "rgba(255,255,255,0.2)",
-              "&:hover": {
-                borderColor: "#66c0f4",
-                color: "#66c0f4",
-              },
+              "&:hover": { borderColor: "#66c0f4", color: "#66c0f4" },
             }}
           >
             Tillbaka

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { sequelize } = require("./models");
 
 const gamesRoute = require("./routes/gamesRoute");
 const postsRoute = require("./routes/postsRoute");
@@ -23,5 +24,6 @@ app.get("/", (req, res) => {
 const PORT = 5000;
 
 app.listen(PORT, async () => {
+  await sequelize.sync();
   console.log(`Server running on http://localhost:${PORT}`);
 });

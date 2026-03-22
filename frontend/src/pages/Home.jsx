@@ -81,7 +81,7 @@ function Home() {
             sx={{ color: "#c7d5e0", mb: 4, maxWidth: 600, lineHeight: 1.7 }}
           >
             Ditt personliga spelbibliotek. Samla, organisera och håll koll på
-            alla dina spel — inspirerat av Steam.
+            alla dina spel
           </Typography>
 
           <Stack direction="row" spacing={2} flexWrap="wrap">
