@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   Box, Button, Chip, Stack, Typography, Rating,
-  TextField, Divider, Paper,
+  TextField, Divider, Paper, InputAdornment,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PageContainer from "../components/layout/PageContainer";
@@ -22,6 +22,7 @@ function GameDetail() {
   const [ratings, setRatings] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [newRating, setNewRating] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -44,8 +45,8 @@ function GameDetail() {
 
   const handleAddToCart = async () => {
     try {
-      await gameService.addToCart(USER_ID, game.id, 1);
-      alert("Spelet lades till i varukorgen!");
+      await gameService.addToCart(USER_ID, game.id, quantity);
+      alert(`${quantity} st ${game.title} lades till i varukorgen!`);
     } catch (err) {
       console.error("Kunde inte lägga till i varukorg", err);
     }
@@ -140,14 +141,10 @@ function GameDetail() {
             label={game.Platform?.name || game.platform || "Okänd plattform"}
             sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
           />
-          <Chip
-            label={game.status || "Okänd status"}
-            sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
-          />
         </Stack>
 
         {game.price && (
-          <Typography variant="h5" sx={{ color: "#66c0f4", fontWeight: 800, mb: 3 }}>
+          <Typography variant="h5" sx={{ color: "#57cc99", fontWeight: 800, mb: 3 }}>
             {game.price} kr
           </Typography>
         )}
@@ -165,12 +162,7 @@ function GameDetail() {
               px: 1.5,
               py: 0.5,
             }}>
-              <Rating
-                value={averageRating}
-                precision={0.1}
-                readOnly
-                sx={{ color: "#66c0f4" }}
-              />
+              <Rating value={averageRating} precision={0.1} readOnly sx={{ color: "#66c0f4" }} />
             </Box>
             <Typography sx={{ color: "#ffffff", fontWeight: 700 }}>
               {averageRating > 0 ? `${averageRating} / 5` : "Inga betyg ännu"}
@@ -216,7 +208,25 @@ function GameDetail() {
           {game.description || "Ingen beskrivning tillagd."}
         </Typography>
 
-        <Stack direction="row" spacing={2} sx={{ mb: 5 }}>
+        {/* Antal + Lägg i varukorg */}
+        <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 5 }}>
+          <TextField
+            type="number"
+            label="Antal"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+            inputProps={{ min: 1 }}
+            sx={{
+              width: 100,
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#f5f7fa",
+                color: "#111",
+                borderRadius: "10px",
+              },
+              "& .MuiInputLabel-root": { color: "#c7d5e0" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "#66c0f4" },
+            }}
+          />
           <Button
             variant="contained"
             startIcon={<ShoppingCartIcon />}
@@ -225,6 +235,8 @@ function GameDetail() {
               backgroundColor: "#57cc99",
               color: "#0b1a24",
               fontWeight: 700,
+              py: 1.5,
+              px: 3,
               "&:hover": { backgroundColor: "#3dba83" },
             }}
           >

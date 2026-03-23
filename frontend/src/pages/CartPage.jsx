@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import {
-  Box, Typography, Button, Paper, Stack, Divider, IconButton
+  Box, Typography, Button, Paper, Stack, Divider, IconButton, TextField
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PageContainer from "../components/layout/PageContainer";
 import Loading from "../components/common/Loading";
 import gameService from "../services/gameService";
+import { Link } from "react-router-dom";
 
 const USER_ID = 1;
 
@@ -33,6 +35,17 @@ function CartPage() {
       setCart(res.data);
     } catch (err) {
       console.error("Kunde inte ta bort spel", err);
+    }
+  };
+
+  const handleUpdateAmount = async (gameId, newAmount) => {
+    if (newAmount < 1) return;
+    try {
+      await gameService.removeFromCart(USER_ID, gameId);
+      const res = await gameService.addToCart(USER_ID, gameId, newAmount);
+      setCart(res.data);
+    } catch (err) {
+      console.error("Kunde inte uppdatera antal", err);
     }
   };
 
@@ -64,11 +77,13 @@ function CartPage() {
             border: "1px solid rgba(255,255,255,0.07)",
           }}
         >
-          <Typography sx={{ color: "#8fa7ba", mb: 2 }}>
+          <ShoppingCartIcon sx={{ fontSize: 48, color: "#8fa7ba", mb: 2 }} />
+          <Typography sx={{ color: "#8fa7ba", mb: 3 }}>
             Din varukorg är tom.
           </Typography>
           <Button
-            href="/games"
+            component={Link}
+            to="/games"
             variant="contained"
             sx={{
               backgroundColor: "#66c0f4",
@@ -77,7 +92,7 @@ function CartPage() {
               "&:hover": { backgroundColor: "#8fd7ff" },
             }}
           >
-            Bläddra spel
+            Gå till butiken
           </Button>
         </Paper>
       ) : (
@@ -110,19 +125,64 @@ function CartPage() {
                   }}
                 />
                 <Box sx={{ flex: 1 }}>
-                  <Typography sx={{ fontWeight: 700, color: "#ffffff" }}>
+                  <Typography sx={{ fontWeight: 700, color: "#ffffff", mb: 0.5 }}>
                     {game.title}
                   </Typography>
                   <Typography variant="body2" sx={{ color: "#8fa7ba" }}>
-                    Antal: {game.amount}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "#8fa7ba" }}>
-                    Pris: {game.price} kr/st
+                    {game.price} kr/st
                   </Typography>
                 </Box>
-                <Typography sx={{ fontWeight: 800, color: "#66c0f4" }}>
+
+                {/* Antal-väljare */}
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleUpdateAmount(game.id, game.amount - 1)}
+                    sx={{
+                      color: "#c7d5e0",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      borderRadius: "8px",
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    −
+                  </IconButton>
+                  <TextField
+                    value={game.amount}
+                    onChange={(e) => handleUpdateAmount(game.id, parseInt(e.target.value) || 1)}
+                    inputProps={{ min: 1, style: { textAlign: "center", padding: "4px" } }}
+                    sx={{
+                      width: 50,
+                      "& .MuiOutlinedInput-root": {
+                        backgroundColor: "rgba(255,255,255,0.08)",
+                        color: "#ffffff",
+                        borderRadius: "8px",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "rgba(255,255,255,0.15)",
+                      },
+                    }}
+                  />
+                  <IconButton
+                    size="small"
+                    onClick={() => handleUpdateAmount(game.id, game.amount + 1)}
+                    sx={{
+                      color: "#c7d5e0",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      borderRadius: "8px",
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    +
+                  </IconButton>
+                </Stack>
+
+                <Typography sx={{ fontWeight: 800, color: "#57cc99", minWidth: 80, textAlign: "right" }}>
                   {game.subtotal} kr
                 </Typography>
+
                 <IconButton
                   onClick={() => handleRemove(game.id)}
                   sx={{ color: "#ff6b6b" }}
@@ -157,9 +217,9 @@ function CartPage() {
             </Button>
             <Box sx={{ textAlign: "right" }}>
               <Typography variant="body2" sx={{ color: "#8fa7ba" }}>
-                Totalt
+                Totalt ({cart.games.reduce((acc, g) => acc + g.amount, 0)} st)
               </Typography>
-              <Typography variant="h5" sx={{ fontWeight: 900, color: "#66c0f4" }}>
+              <Typography variant="h5" sx={{ fontWeight: 900, color: "#57cc99" }}>
                 {cart.total} kr
               </Typography>
             </Box>
