@@ -1,17 +1,23 @@
 // EditGame.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  Button, Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle, useTheme,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PageContainer from "../components/layout/PageContainer";
 import GameForm from "../components/games/GameForm";
+import Breadcrumbs from "../components/common/Breadcrumbs";
 import gameService from "../services/gameService";
 import Loading from "../components/common/Loading";
 import ErrorMessage from "../components/common/ErrorMessage";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 function EditGame() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
 
   const [formData, setFormData] = useState({
     title: "",
@@ -65,7 +71,6 @@ function EditGame() {
       await gameService.updateGame(id, formData);
       navigate(`/games/${id}`);
     } catch (error) {
-      console.error("Fel vid uppdatering av spel:", error);
       setError("Kunde inte uppdatera spelet.");
     }
   };
@@ -75,7 +80,6 @@ function EditGame() {
       await gameService.deleteGame(id);
       navigate("/games");
     } catch (error) {
-      console.error("Fel vid radering av spel:", error);
       setError("Kunde inte radera spelet.");
     }
   };
@@ -90,6 +94,15 @@ function EditGame() {
 
   return (
     <PageContainer>
+      <Breadcrumbs
+        crumbs={[
+          { label: "Hem", to: "/" },
+          { label: "Butik", to: "/games" },
+          { label: formData.title, to: `/games/${id}` },
+          { label: "Redigera" },
+        ]}
+      />
+
       {error && <ErrorMessage message={error} />}
       <GameForm
         formData={formData}
@@ -124,17 +137,24 @@ function EditGame() {
         onClose={() => setOpenDialog(false)}
         PaperProps={{
           sx: {
-            background: "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: isDark
+              ? "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)"
+              : "linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%)",
+            border: isDark
+              ? "1px solid rgba(255,255,255,0.08)"
+              : "1px solid rgba(0,0,0,0.08)",
             borderRadius: "16px",
-            color: "#ffffff",
           },
         }}
       >
-        <DialogTitle sx={{ fontWeight: 800 }}>Ta bort spel?</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 800, color: theme.palette.text.primary }}>
+          Ta bort spel?
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ color: "#c7d5e0" }}>
-            Är du säker på att du vill ta bort <strong style={{ color: "#ffffff" }}>{formData.title}</strong>? Detta går inte att ångra.
+          <DialogContentText sx={{ color: theme.palette.text.secondary }}>
+            Är du säker på att du vill ta bort{" "}
+            <strong style={{ color: theme.palette.text.primary }}>{formData.title}</strong>?
+            Detta går inte att ångra.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 2, gap: 1 }}>
@@ -142,8 +162,8 @@ function EditGame() {
             onClick={() => setOpenDialog(false)}
             variant="outlined"
             sx={{
-              color: "#c7d5e0",
-              borderColor: "rgba(255,255,255,0.2)",
+              color: theme.palette.text.secondary,
+              borderColor: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)",
               "&:hover": { borderColor: "#66c0f4", color: "#66c0f4" },
             }}
           >

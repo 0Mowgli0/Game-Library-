@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
   InputAdornment,
+  useTheme,
 } from "@mui/material";
 import gameService from "../../services/gameService";
 
@@ -14,6 +15,8 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -38,15 +41,21 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
   const textFieldStyles = {
     mb: 2,
     "& .MuiOutlinedInput-root": {
-      backgroundColor: "#f5f7fa",
-      color: "#111",
+      backgroundColor: isDark ? "#2a475e" : "#ffffff",
+      color: theme.palette.text.primary,
       borderRadius: "10px",
     },
     "& .MuiInputLabel-root": {
-      color: "#c7d5e0",
+      color: theme.palette.text.secondary,
     },
     "& .MuiInputLabel-root.Mui-focused": {
       color: "#66c0f4",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+    },
+    "& .MuiSvgIcon-root": {
+      color: theme.palette.text.secondary,
     },
   };
 
@@ -56,13 +65,19 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
       onSubmit={handleSubmit}
       sx={{
         p: 4,
-        background: "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)",
+        background: isDark
+          ? "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)"
+          : "linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%)",
         borderRadius: "16px",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 12px 28px rgba(0,0,0,0.25)",
+        border: isDark
+          ? "1px solid rgba(255,255,255,0.08)"
+          : "1px solid rgba(0,0,0,0.08)",
+        boxShadow: isDark
+          ? "0 12px 28px rgba(0,0,0,0.25)"
+          : "0 12px 28px rgba(0,0,0,0.08)",
       }}
     >
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 800 }}>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: 800, color: theme.palette.text.primary }}>
         {buttonText === "Lägg till spel" ? "Lägg till spel" : "Redigera spel"}
       </Typography>
 

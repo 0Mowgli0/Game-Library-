@@ -1,19 +1,27 @@
+// GameDetail.jsx - byt ut USER_ID mot currentUser
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   Box, Button, Chip, Stack, Typography, Rating,
-  TextField, Divider, Paper, InputAdornment,
+  TextField, Divider, Paper, useTheme,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PageContainer from "../components/layout/PageContainer";
 import Loading from "../components/common/Loading";
 import ErrorMessage from "../components/common/ErrorMessage";
+import Breadcrumbs from "../components/common/Breadcrumbs";
 import gameService from "../services/gameService";
-
-const USER_ID = 1;
+import { useSnackbar } from "../context/SnackbarContext";
+import { useCart } from "../context/CartContext";
+import { useUser } from "../context/UserContext";
 
 function GameDetail() {
   const { id } = useParams();
+  const { showSnackbar } = useSnackbar();
+  const { fetchCartCount } = useCart();
+  const { currentUser } = useUser();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -44,11 +52,16 @@ function GameDetail() {
   }, [id]);
 
   const handleAddToCart = async () => {
+    if (!currentUser) {
+      showSnackbar("Välj en användare först!", "warning");
+      return;
+    }
     try {
-      await gameService.addToCart(USER_ID, game.id, quantity);
-      alert(`${quantity} st ${game.title} lades till i varukorgen!`);
+      await gameService.addToCart(currentUser.id, game.id, quantity);
+      showSnackbar(`${quantity} st ${game.title} lades till i varukorgen!`);
+      fetchCartCount();
     } catch (err) {
-      console.error("Kunde inte lägga till i varukorg", err);
+      showSnackbar("Kunde inte lägga till i varukorgen", "error");
     }
   };
 
@@ -60,8 +73,9 @@ function GameDetail() {
       setRatings(ratingRes.data.ratings);
       setAverageRating(ratingRes.data.average);
       setNewRating(0);
+      showSnackbar("Betyg skickat!");
     } catch (err) {
-      console.error("Kunde inte sätta betyg", err);
+      showSnackbar("Kunde inte sätta betyg", "error");
     }
   };
 
@@ -71,8 +85,9 @@ function GameDetail() {
       const res = await gameService.createReview({ ...reviewForm, gameId: id });
       setReviews((prev) => [...prev, res.data]);
       setReviewForm({ title: "", body: "", rating: 0 });
+      showSnackbar("Recension publicerad!");
     } catch (err) {
-      console.error("Kunde inte skapa recension", err);
+      showSnackbar("Kunde inte skapa recension", "error");
     }
   };
 
@@ -80,8 +95,9 @@ function GameDetail() {
     try {
       await gameService.deleteReview(reviewId);
       setReviews((prev) => prev.filter((r) => r.id !== reviewId));
+      showSnackbar("Recension borttagen", "info");
     } catch (err) {
-      console.error("Kunde inte radera recension", err);
+      showSnackbar("Kunde inte radera recension", "error");
     }
   };
 
@@ -94,23 +110,40 @@ function GameDetail() {
   const textFieldStyles = {
     mb: 2,
     "& .MuiOutlinedInput-root": {
-      backgroundColor: "#f5f7fa",
-      color: "#111",
+      backgroundColor: isDark ? "#2a475e" : "#ffffff",
+      color: theme.palette.text.primary,
       borderRadius: "10px",
     },
-    "& .MuiInputLabel-root": { color: "#c7d5e0" },
+    "& .MuiInputLabel-root": { color: theme.palette.text.secondary },
     "& .MuiInputLabel-root.Mui-focused": { color: "#66c0f4" },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+    },
   };
 
   return (
     <PageContainer>
+      <Breadcrumbs
+        crumbs={[
+          { label: "Hem", to: "/" },
+          { label: "Butik", to: "/games" },
+          { label: game.title },
+        ]}
+      />
+
       <Box
         sx={{
           p: 4,
           borderRadius: "18px",
-          background: "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          boxShadow: "0 12px 28px rgba(0,0,0,0.25)",
+          background: isDark
+            ? "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)"
+            : "linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%)",
+          border: isDark
+            ? "1px solid rgba(255,255,255,0.08)"
+            : "1px solid rgba(0,0,0,0.08)",
+          boxShadow: isDark
+            ? "0 12px 28px rgba(0,0,0,0.25)"
+            : "0 12px 28px rgba(0,0,0,0.08)",
         }}
       >
         <Box
@@ -124,11 +157,11 @@ function GameDetail() {
             objectFit: "cover",
             borderRadius: "14px",
             mb: 3,
-            backgroundColor: "#2a475e",
+            backgroundColor: isDark ? "#2a475e" : "#e0eaf5",
           }}
         />
 
-        <Typography variant="h3" sx={{ fontWeight: 900, mb: 2, color: "#ffffff" }}>
+        <Typography variant="h3" sx={{ fontWeight: 900, mb: 2, color: theme.palette.text.primary }}>
           {game.title}
         </Typography>
 
@@ -139,7 +172,10 @@ function GameDetail() {
           />
           <Chip
             label={game.Platform?.name || game.platform || "Okänd plattform"}
-            sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
+            sx={{
+              backgroundColor: isDark ? "#2a475e" : "#e0eaf5",
+              color: theme.palette.text.secondary,
+            }}
           />
         </Stack>
 
@@ -151,20 +187,20 @@ function GameDetail() {
 
         {/* Snittbetyg */}
         <Box sx={{ mb: 3 }}>
-          <Typography sx={{ color: "#8fa7ba", mb: 0.5 }}>
-            Snittbetyg ({ratings.length} {ratings.length === 1 ? "betyg" : "betyg"})
+          <Typography sx={{ color: theme.palette.text.secondary, mb: 0.5 }}>
+            Snittbetyg ({ratings.length} betyg)
           </Typography>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Box sx={{
               display: "inline-block",
-              backgroundColor: "rgba(255,255,255,0.08)",
+              backgroundColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
               borderRadius: "8px",
               px: 1.5,
               py: 0.5,
             }}>
               <Rating value={averageRating} precision={0.1} readOnly sx={{ color: "#66c0f4" }} />
             </Box>
-            <Typography sx={{ color: "#ffffff", fontWeight: 700 }}>
+            <Typography sx={{ color: theme.palette.text.primary, fontWeight: 700 }}>
               {averageRating > 0 ? `${averageRating} / 5` : "Inga betyg ännu"}
             </Typography>
           </Stack>
@@ -172,12 +208,12 @@ function GameDetail() {
 
         {/* Sätt betyg */}
         <Box sx={{ mb: 3 }}>
-          <Typography sx={{ color: "#8fa7ba", mb: 0.5 }}>Sätt ditt betyg</Typography>
+          <Typography sx={{ color: theme.palette.text.secondary, mb: 0.5 }}>Sätt ditt betyg</Typography>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Box sx={{
               display: "inline-block",
-              backgroundColor: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.25)",
+              backgroundColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.05)",
+              border: isDark ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(0,0,0,0.1)",
               borderRadius: "8px",
               px: 1.5,
               py: 0.5,
@@ -204,7 +240,7 @@ function GameDetail() {
           </Stack>
         </Box>
 
-        <Typography variant="body1" sx={{ color: "#c7d5e0", lineHeight: 1.8, mb: 3 }}>
+        <Typography variant="body1" sx={{ color: theme.palette.text.secondary, lineHeight: 1.8, mb: 3 }}>
           {game.description || "Ingen beskrivning tillagd."}
         </Typography>
 
@@ -216,16 +252,7 @@ function GameDetail() {
             value={quantity}
             onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
             inputProps={{ min: 1 }}
-            sx={{
-              width: 100,
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#f5f7fa",
-                color: "#111",
-                borderRadius: "10px",
-              },
-              "& .MuiInputLabel-root": { color: "#c7d5e0" },
-              "& .MuiInputLabel-root.Mui-focused": { color: "#66c0f4" },
-            }}
+            sx={{ width: 100, ...textFieldStyles }}
           />
           <Button
             variant="contained"
@@ -260,8 +287,8 @@ function GameDetail() {
             to="/games"
             variant="outlined"
             sx={{
-              color: "#c7d5e0",
-              borderColor: "rgba(255,255,255,0.2)",
+              color: theme.palette.text.secondary,
+              borderColor: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)",
               "&:hover": { borderColor: "#66c0f4", color: "#66c0f4" },
             }}
           >
@@ -269,15 +296,15 @@ function GameDetail() {
           </Button>
         </Stack>
 
-        <Divider sx={{ borderColor: "rgba(255,255,255,0.08)", mb: 4 }} />
+        <Divider sx={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", mb: 4 }} />
 
         {/* Recensioner */}
-        <Typography variant="h5" sx={{ fontWeight: 800, color: "#ffffff", mb: 3 }}>
+        <Typography variant="h5" sx={{ fontWeight: 800, color: theme.palette.text.primary, mb: 3 }}>
           Recensioner
         </Typography>
 
         {reviews.length === 0 ? (
-          <Typography sx={{ color: "#8fa7ba", mb: 3 }}>
+          <Typography sx={{ color: theme.palette.text.secondary, mb: 3 }}>
             Inga recensioner ännu.
           </Typography>
         ) : (
@@ -289,12 +316,12 @@ function GameDetail() {
                 p: 3,
                 mb: 2,
                 borderRadius: "12px",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.07)",
+                background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.02)",
+                border: isDark ? "1px solid rgba(255,255,255,0.07)" : "1px solid rgba(0,0,0,0.07)",
               }}
             >
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-                <Typography sx={{ fontWeight: 700, color: "#ffffff" }}>
+                <Typography sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
                   {review.title}
                 </Typography>
                 <Button
@@ -308,7 +335,7 @@ function GameDetail() {
               {review.rating > 0 && (
                 <Rating value={review.rating} readOnly size="small" sx={{ color: "#66c0f4", mb: 1 }} />
               )}
-              <Typography variant="body2" sx={{ color: "#c7d5e0" }}>
+              <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
                 {review.body}
               </Typography>
             </Paper>
@@ -316,7 +343,7 @@ function GameDetail() {
         )}
 
         {/* Lägg till recension */}
-        <Typography variant="h6" sx={{ fontWeight: 800, color: "#ffffff", mt: 4, mb: 2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, color: theme.palette.text.primary, mt: 4, mb: 2 }}>
           Lägg till recension
         </Typography>
 
@@ -338,11 +365,11 @@ function GameDetail() {
             sx={textFieldStyles}
           />
           <Box sx={{ mb: 2 }}>
-            <Typography sx={{ color: "#c7d5e0", mb: 1 }}>Betyg</Typography>
+            <Typography sx={{ color: theme.palette.text.secondary, mb: 1 }}>Betyg</Typography>
             <Box sx={{
               display: "inline-block",
-              backgroundColor: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.25)",
+              backgroundColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.05)",
+              border: isDark ? "1px solid rgba(255,255,255,0.25)" : "1px solid rgba(0,0,0,0.1)",
               borderRadius: "8px",
               px: 1.5,
               py: 0.5,

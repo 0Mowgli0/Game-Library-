@@ -1,7 +1,9 @@
+// AddGame.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
 import GameForm from "../components/games/GameForm";
+import Breadcrumbs from "../components/common/Breadcrumbs";
 import gameService from "../services/gameService";
 
 function AddGame() {
@@ -9,12 +11,12 @@ function AddGame() {
 
   const [formData, setFormData] = useState({
     title: "",
-    genre: "",
-    platform: "",
-    status: "Planerar",
+    genreId: "",
+    platformId: "",
     releaseDate: "",
-    imageUrl: "",
+    image: "",
     description: "",
+    price: "",
   });
 
   const handleChange = (e) => {
@@ -26,7 +28,6 @@ function AddGame() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await gameService.createGame(formData);
       navigate("/games");
@@ -37,6 +38,13 @@ function AddGame() {
 
   return (
     <PageContainer>
+      <Breadcrumbs
+        crumbs={[
+          { label: "Hem", to: "/" },
+          { label: "Butik", to: "/games" },
+          { label: "Lägg till spel" },
+        ]}
+      />
       <GameForm
         formData={formData}
         handleChange={handleChange}

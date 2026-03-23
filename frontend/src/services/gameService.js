@@ -21,6 +21,8 @@ const addToCart = (userId, gameId, amount) => api.post("/cart/add", { userId, ga
 const removeFromCart = (userId, gameId) => api.delete("/cart/remove", { data: { userId, gameId } });
 const clearCart = (userId) => api.delete(`/cart/clear/${userId}`);
 
+const getAllUsers = () => api.get("/users");
+
 export default {
   getAllGames,
   getGameById,
@@ -38,4 +40,5 @@ export default {
   addToCart,
   removeFromCart,
   clearCart,
+  getAllUsers,
 };

@@ -42,7 +42,7 @@ CREATE TABLE `cartrows` (
 
 LOCK TABLES `cartrows` WRITE;
 /*!40000 ALTER TABLE `cartrows` DISABLE KEYS */;
-INSERT INTO `cartrows` VALUES (1,4,2,'2026-03-23 15:02:35','2026-03-23 15:02:35'),(1,5,2,'2026-03-23 15:02:35','2026-03-23 15:02:35'),(1,7,2,'2026-03-23 15:02:32','2026-03-23 15:02:32');
+INSERT INTO `cartrows` VALUES (1,5,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(1,7,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(1,8,1,'2026-03-23 20:05:24','2026-03-23 20:05:24');
 /*!40000 ALTER TABLE `cartrows` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,7 +159,7 @@ CREATE TABLE `games` (
   CONSTRAINT `games_ibfk_8` FOREIGN KEY (`genreId`) REFERENCES `genres` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `games_ibfk_9` FOREIGN KEY (`platformId`) REFERENCES `platforms` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `Games_platformId_foreign_idx` FOREIGN KEY (`platformId`) REFERENCES `platforms` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,7 +168,7 @@ CREATE TABLE `games` (
 
 LOCK TABLES `games` WRITE;
 /*!40000 ALTER TABLE `games` DISABLE KEYS */;
-INSERT INTO `games` VALUES (1,'The Witcher 3 - The wild hunt ','Pausat',2015,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstore-images.s-microsoft.com%2Fimage%2Fapps.53717.65858607118306853.39ed2a08-df0d-4ae1-aee0-c66ffb783a34.80ba72da-abfb-4af6-81f2-a443d12fb870&f=1&nofb=1&ipt=a20bb44db4478e4619bde6cf9911f6d4bb5d61d92d81c483f033922ffd265163','Open world RPG adventure','2026-03-21 18:26:25','2026-03-23 12:50:54',NULL,2,3,300),(3,'Elden Ring','Klar',2022,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic0.gamerantimages.com%2Fwordpress%2Fwp-content%2Fuploads%2F2023%2F05%2Felden-ring-vyke-cover-1.jpg&f=1&nofb=1&ipt=ca2fad115e699a0a804ec9d558e48388f3b2cf704ae6ab3bb4e2cca8bb591bf3','Fantasy action RPG','2026-03-21 18:26:25','2026-03-23 12:51:03',5,2,3,600),(4,'deadlock','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-strapi.deadlock.coach%2Fdeadlock_pc_game_steam_cover_4467759ec6.jpg&f=1&nofb=1&ipt=7b4f905110218438917e93bf5ec57c8f88255fca7d182c5d8911bcca7b01f72d','kul spel tycker jag','2026-03-21 19:55:20','2026-03-23 12:50:45',NULL,1,4,100),(5,'FiFA 26','Klar',NULL,'https://www.fifaultimateteam.it/wp-content/uploads/2025/08/Cover-Bellingham-Musiala-Standard-EA-FC-26.webp','Ganska trÔö£├ækigt spel om du frÔö£├ægar mig','2026-03-22 09:34:56','2026-03-23 12:50:35',1,2,2,200),(7,'Valornat','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.--01k4rNVih9Tc7fG8xl9wHaEK%3Fpid%3DApi&f=1&ipt=453482b3e8eeb690438d24c42470695fb1257cc81ae2ac16862d50f55d108edb&ipo=images','roligt spel tycker jag!!!!','2026-03-22 16:59:41','2026-03-23 12:50:21',NULL,1,4,300),(8,'NHL 26','Planerar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.NRWIAeJkaZAvp1owqAEM1QHaLH%3Fpid%3DApi&f=1&ipt=91e83b860399c10e9f85ca546d0265d154a5e6dc18e510f41c0daa589572554b&ipo=images','Hockey sport spel f├Âr unga och vuxna ','2026-03-23 15:03:41','2026-03-23 15:03:41',NULL,2,2,500);
+INSERT INTO `games` VALUES (1,'The Witcher 3 - The wild hunt ','Pausat',2015,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstore-images.s-microsoft.com%2Fimage%2Fapps.53717.65858607118306853.39ed2a08-df0d-4ae1-aee0-c66ffb783a34.80ba72da-abfb-4af6-81f2-a443d12fb870&f=1&nofb=1&ipt=a20bb44db4478e4619bde6cf9911f6d4bb5d61d92d81c483f033922ffd265163','Open world RPG adventure','2026-03-21 18:26:25','2026-03-23 12:50:54',NULL,2,3,300),(3,'Elden Ring','Klar',2022,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic0.gamerantimages.com%2Fwordpress%2Fwp-content%2Fuploads%2F2023%2F05%2Felden-ring-vyke-cover-1.jpg&f=1&nofb=1&ipt=ca2fad115e699a0a804ec9d558e48388f3b2cf704ae6ab3bb4e2cca8bb591bf3','Fantasy action RPG','2026-03-21 18:26:25','2026-03-23 12:51:03',5,2,3,600),(4,'deadlock','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-strapi.deadlock.coach%2Fdeadlock_pc_game_steam_cover_4467759ec6.jpg&f=1&nofb=1&ipt=7b4f905110218438917e93bf5ec57c8f88255fca7d182c5d8911bcca7b01f72d','FPS spel f├Âr ├Ñldrar 12+','2026-03-21 19:55:20','2026-03-23 20:47:49',NULL,1,4,100),(5,'FiFA 26','Klar',NULL,'https://www.fifaultimateteam.it/wp-content/uploads/2025/08/Cover-Bellingham-Musiala-Standard-EA-FC-26.webp','Fotbollspel f├Âr ├Ñldrar 8+','2026-03-22 09:34:56','2026-03-23 20:47:23',1,2,2,200),(7,'Valorant','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.--01k4rNVih9Tc7fG8xl9wHaEK%3Fpid%3DApi&f=1&ipt=453482b3e8eeb690438d24c42470695fb1257cc81ae2ac16862d50f55d108edb&ipo=images','FPS spel f├Âr 12+','2026-03-22 16:59:41','2026-03-23 20:46:44',NULL,1,4,300),(8,'NHL 26','Planerar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.NRWIAeJkaZAvp1owqAEM1QHaLH%3Fpid%3DApi&f=1&ipt=91e83b860399c10e9f85ca546d0265d154a5e6dc18e510f41c0daa589572554b&ipo=images','Hockey sport spel fÔö£├ér unga och vuxna ','2026-03-23 15:03:41','2026-03-23 15:03:41',NULL,2,2,500),(12,'Counter strike 2',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.CXssb09l_NROwY3iGXyFqQHaEK%3Fpid%3DApi&f=1&ipt=15832ed42d7bed3e6a53762faa101bab45e08141d3a81c8b4656a3feb69e0eb9&ipo=images','FPS spel f├Âr 18+','2026-03-23 20:45:29','2026-03-23 20:46:03',NULL,1,4,200),(13,'Among us ',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.mdxkBtY_smSWmzh7CJ-DHAHaEK%3Fpid%3DApi&f=1&ipt=c227b7c3138590cd9a420f2c3f146b90d7a40e442bc87ae1d43c426ff110e287&ipo=images','stratagy och rollspel f├Âr ├Ñldrar 8+','2026-03-23 20:49:18','2026-03-23 20:49:18',NULL,1,6,275),(14,'liar\'s Bar',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.explicit.bing.net%2Fth%2Fid%2FOIP.iaYBxOh0fQ94zS6pAu1RBQHaLH%3Fpid%3DApi&f=1&ipt=6d0e188551b578ad0bc49256b4c9a6c4f3b5d2d7928a414525b7bac978672ee2&ipo=images','Stratagy spel f├Âr 15+','2026-03-23 20:51:55','2026-03-23 20:51:55',NULL,1,6,150);
 /*!40000 ALTER TABLE `games` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,7 +257,7 @@ CREATE TABLE `ratings` (
   CONSTRAINT `ratings_ibfk_7` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_8` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_9` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -266,7 +266,7 @@ CREATE TABLE `ratings` (
 
 LOCK TABLES `ratings` WRITE;
 /*!40000 ALTER TABLE `ratings` DISABLE KEYS */;
-INSERT INTO `ratings` VALUES (1,7,4,'2026-03-23 12:37:31','2026-03-23 12:37:31'),(2,3,5,'2026-03-23 12:56:39','2026-03-23 12:56:39');
+INSERT INTO `ratings` VALUES (1,7,4,'2026-03-23 12:37:31','2026-03-23 12:37:31'),(2,3,5,'2026-03-23 12:56:39','2026-03-23 12:56:39'),(3,12,3,'2026-03-23 20:45:40','2026-03-23 20:45:40');
 /*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -318,7 +318,7 @@ CREATE TABLE `reviews` (
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-INSERT INTO `reviews` VALUES (1,7,'valo recension av samuel','Amen dehÔö£├▒r Ôö£├▒r bra ',4,'2026-03-22 17:00:18','2026-03-22 17:00:18'),(3,3,'BÔö£├▒sta jag spelat','wow detta spel Ôö£├▒r sÔö£├æ kul wihooo',5,'2026-03-23 12:57:25','2026-03-23 12:57:25');
+INSERT INTO `reviews` VALUES (1,7,'valo recension av samuel','Amen deh├ö├Â┬úÔö£ÔûÆr ├ö├Â┬úÔö£ÔûÆr bra ',4,'2026-03-22 17:00:18','2026-03-22 17:00:18'),(3,3,'B├ö├Â┬úÔö£ÔûÆsta jag spelat','wow detta spel ├ö├Â┬úÔö£ÔûÆr s├ö├Â┬úÔö£├ª kul wihooo',5,'2026-03-23 12:57:25','2026-03-23 12:57:25');
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -355,7 +355,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `email_16` (`email`),
   UNIQUE KEY `email_17` (`email`),
   UNIQUE KEY `email_18` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -364,7 +364,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Samuel','Efternamn','samuel@mail.com','2026-03-23 12:28:54','2026-03-23 12:28:54');
+INSERT INTO `users` VALUES (1,'Samuel','Efternamn','samuel@mail.com','2026-03-23 12:28:54','2026-03-23 12:28:54'),(2,'Joachim','Karlsson','Joachim.karlsson@gmail.com','2026-03-23 20:31:12','2026-03-23 20:31:12'),(3,'Olle','├ûsterdhal','olle.ost@gamil.com','2026-03-23 20:31:41','2026-03-23 20:31:41'),(4,'Hannah','Karlsson','hannah.karlsson01@gmai.com','2026-03-23 20:32:23','2026-03-23 20:32:23'),(5,'William','hedrum','william.hedpung@gmail.com','2026-03-23 20:32:56','2026-03-23 20:32:56');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -377,4 +377,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-23 16:04:36
+-- Dump completed on 2026-03-23 21:54:11

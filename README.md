@@ -104,6 +104,11 @@ Installera dependencies:
 ```bash
 npm install
 ```
+```
+
+installera detta för animationer: 
+npm install framer-motion
+```
 
 Starta frontend:
 ```bash

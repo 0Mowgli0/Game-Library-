@@ -1,13 +1,34 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+// main.jsx
+import { StrictMode, useRef } from "react";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App";
+import { SnackbarProvider } from "./context/SnackbarContext";
+import { CartProvider, useCart } from "./context/CartContext";
+import { ThemeProviderWrapper } from "./context/ThemeContext";
+import { UserProvider } from "./context/UserContext";
 import "./index.css";
+import App from "./App.jsx";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+function AppWithProviders() {
+  const { updateUser } = useCart();
+
+  return (
+    <UserProvider onUserChange={updateUser}>
+      <SnackbarProvider>
+        <App />
+      </SnackbarProvider>
+    </UserProvider>
+  );
+}
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
     <BrowserRouter>
-      <App />
+      <ThemeProviderWrapper>
+        <CartProvider>
+          <AppWithProviders />
+        </CartProvider>
+      </ThemeProviderWrapper>
     </BrowserRouter>
-  </React.StrictMode>
+  </StrictMode>
 );
