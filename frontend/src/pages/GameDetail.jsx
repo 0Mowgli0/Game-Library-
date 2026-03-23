@@ -4,10 +4,13 @@ import {
   Box, Button, Chip, Stack, Typography, Rating,
   TextField, Divider, Paper,
 } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PageContainer from "../components/layout/PageContainer";
 import Loading from "../components/common/Loading";
 import ErrorMessage from "../components/common/ErrorMessage";
 import gameService from "../services/gameService";
+
+const USER_ID = 1;
 
 function GameDetail() {
   const { id } = useParams();
@@ -16,6 +19,9 @@ function GameDetail() {
   const [error, setError] = useState("");
   const [reviews, setReviews] = useState([]);
   const [reviewForm, setReviewForm] = useState({ title: "", body: "", rating: 0 });
+  const [ratings, setRatings] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [newRating, setNewRating] = useState(0);
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -24,6 +30,9 @@ function GameDetail() {
         setGame(response.data);
         const reviewRes = await gameService.getReviewsByGameId(id);
         setReviews(reviewRes.data);
+        const ratingRes = await gameService.getRatingsByGameId(id);
+        setRatings(ratingRes.data.ratings);
+        setAverageRating(ratingRes.data.average);
       } catch (err) {
         setError("Kunde inte hämta spelet.");
       } finally {
@@ -32,6 +41,28 @@ function GameDetail() {
     };
     fetchGame();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    try {
+      await gameService.addToCart(USER_ID, game.id, 1);
+      alert("Spelet lades till i varukorgen!");
+    } catch (err) {
+      console.error("Kunde inte lägga till i varukorg", err);
+    }
+  };
+
+  const handleRatingSubmit = async () => {
+    if (!newRating) return;
+    try {
+      await gameService.createRating({ gameId: id, rating: newRating });
+      const ratingRes = await gameService.getRatingsByGameId(id);
+      setRatings(ratingRes.data.ratings);
+      setAverageRating(ratingRes.data.average);
+      setNewRating(0);
+    } catch (err) {
+      console.error("Kunde inte sätta betyg", err);
+    }
+  };
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
@@ -115,9 +146,18 @@ function GameDetail() {
           />
         </Stack>
 
-        {game.status === "Klar" && game.rating && (
-          <Box sx={{ mb: 3 }}>
-            <Typography sx={{ color: "#8fa7ba", mb: 0.5 }}>Betyg</Typography>
+        {game.price && (
+          <Typography variant="h5" sx={{ color: "#66c0f4", fontWeight: 800, mb: 3 }}>
+            {game.price} kr
+          </Typography>
+        )}
+
+        {/* Snittbetyg */}
+        <Box sx={{ mb: 3 }}>
+          <Typography sx={{ color: "#8fa7ba", mb: 0.5 }}>
+            Snittbetyg ({ratings.length} {ratings.length === 1 ? "betyg" : "betyg"})
+          </Typography>
+          <Stack direction="row" alignItems="center" spacing={2}>
             <Box sx={{
               display: "inline-block",
               backgroundColor: "rgba(255,255,255,0.08)",
@@ -125,16 +165,71 @@ function GameDetail() {
               px: 1.5,
               py: 0.5,
             }}>
-              <Rating value={game.rating} readOnly sx={{ color: "#66c0f4" }} />
+              <Rating
+                value={averageRating}
+                precision={0.1}
+                readOnly
+                sx={{ color: "#66c0f4" }}
+              />
             </Box>
-          </Box>
-        )}
+            <Typography sx={{ color: "#ffffff", fontWeight: 700 }}>
+              {averageRating > 0 ? `${averageRating} / 5` : "Inga betyg ännu"}
+            </Typography>
+          </Stack>
+        </Box>
+
+        {/* Sätt betyg */}
+        <Box sx={{ mb: 3 }}>
+          <Typography sx={{ color: "#8fa7ba", mb: 0.5 }}>Sätt ditt betyg</Typography>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Box sx={{
+              display: "inline-block",
+              backgroundColor: "rgba(255,255,255,0.15)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              borderRadius: "8px",
+              px: 1.5,
+              py: 0.5,
+            }}>
+              <Rating
+                value={newRating}
+                onChange={(_, val) => setNewRating(val)}
+                sx={{ color: "#66c0f4" }}
+              />
+            </Box>
+            <Button
+              variant="contained"
+              onClick={handleRatingSubmit}
+              disabled={!newRating}
+              sx={{
+                backgroundColor: "#66c0f4",
+                color: "#0b1a24",
+                fontWeight: 700,
+                "&:hover": { backgroundColor: "#8fd7ff" },
+              }}
+            >
+              Skicka betyg
+            </Button>
+          </Stack>
+        </Box>
 
         <Typography variant="body1" sx={{ color: "#c7d5e0", lineHeight: 1.8, mb: 3 }}>
           {game.description || "Ingen beskrivning tillagd."}
         </Typography>
 
         <Stack direction="row" spacing={2} sx={{ mb: 5 }}>
+          <Button
+            variant="contained"
+            startIcon={<ShoppingCartIcon />}
+            onClick={handleAddToCart}
+            sx={{
+              backgroundColor: "#57cc99",
+              color: "#0b1a24",
+              fontWeight: 700,
+              "&:hover": { backgroundColor: "#3dba83" },
+            }}
+          >
+            Lägg i varukorg
+          </Button>
           <Button
             component={Link}
             to={`/games/edit/${game.id}`}

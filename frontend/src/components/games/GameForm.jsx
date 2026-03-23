@@ -1,3 +1,4 @@
+// GameForm.jsx
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -5,7 +6,7 @@ import {
   MenuItem,
   TextField,
   Typography,
-  Rating,
+  InputAdornment,
 } from "@mui/material";
 import gameService from "../../services/gameService";
 
@@ -110,18 +111,16 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
 
       <TextField
         fullWidth
-        select
-        label="Status"
-        name="status"
-        value={formData.status}
+        label="Pris"
+        name="price"
+        type="number"
+        value={formData.price}
         onChange={handleChange}
+        InputProps={{
+          endAdornment: <InputAdornment position="end">kr</InputAdornment>,
+        }}
         sx={textFieldStyles}
-      >
-        <MenuItem value="Planerar">Planerar</MenuItem>
-        <MenuItem value="Spelar">Spelar</MenuItem>
-        <MenuItem value="Klar">Klar</MenuItem>
-        <MenuItem value="Pausat">Pausat</MenuItem>
-      </TextField>
+      />
 
       <TextField
         fullWidth
@@ -153,31 +152,6 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
         rows={5}
         sx={textFieldStyles}
       />
-
-      {formData.status === "Klar" && (
-        <Box sx={{ mb: 3 }}>
-          <Typography sx={{ color: "#c7d5e0", mb: 1 }}>Betyg</Typography>
-          <Box
-            sx={{
-              display: "inline-block",
-              backgroundColor: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: "8px",
-              px: 1.5,
-              py: 0.5,
-            }}
-          >
-            <Rating
-              name="rating"
-              value={Number(formData.rating) || 0}
-              onChange={(_, newValue) =>
-                handleChange({ target: { name: "rating", value: newValue } })
-              }
-              sx={{ color: "#66c0f4" }}
-            />
-          </Box>
-        </Box>
-      )}
 
       <Button
         type="submit"

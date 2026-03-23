@@ -7,15 +7,29 @@ import {
   Stack,
   Chip,
   Box,
-  Rating,
 } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
+import gameService from "../../services/gameService";
+
+const USER_ID = 1;
 
 function GameCard({ game }) {
+  const handleAddToCart = async () => {
+    try {
+      await gameService.addToCart(USER_ID, game.id, 1);
+      alert("Spelet lades till i varukorgen!");
+    } catch (err) {
+      console.error("Kunde inte lägga till i varukorg", err);
+    }
+  };
+
   return (
     <Card
       sx={{
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
         background: "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)",
         color: "#e6edf3",
         borderRadius: "14px",
@@ -37,43 +51,25 @@ function GameCard({ game }) {
         alt={game.title}
       />
 
-      <CardContent>
+      <CardContent sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
         <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
           {game.title}
         </Typography>
 
         <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: "wrap" }}>
           <Chip
-            label={game.Genre?.name || game.genre || "Okänd genre"}
+            label={game.Genre?.name || "Okänd genre"}
             size="small"
             sx={{ backgroundColor: "#66c0f4", color: "#0b1a24", fontWeight: 700 }}
           />
           <Chip
-            label={game.Platform?.name || game.platform || "Okänd plattform"}
+            label={game.Platform?.name || "Okänd plattform"}
             size="small"
             sx={{ backgroundColor: "#2a475e", color: "#c7d5e0" }}
           />
         </Stack>
 
-        {game.status === "Klar" && game.rating && (
-          <Box sx={{
-            display: "inline-block",
-            backgroundColor: "rgba(255,255,255,0.08)",
-            borderRadius: "8px",
-            px: 1.5,
-            py: 0.5,
-            mb: 1,
-          }}>
-            <Rating
-              value={game.rating}
-              readOnly
-              size="small"
-              sx={{ color: "#66c0f4" }}
-            />
-          </Box>
-        )}
-
-        <Box sx={{ minHeight: 48 }}>
+        <Box sx={{ minHeight: 48, mb: 2 }}>
           <Typography variant="body2" sx={{ color: "#c7d5e0" }}>
             {game.description
               ? game.description.slice(0, 90) + (game.description.length > 90 ? "..." : "")
@@ -81,34 +77,46 @@ function GameCard({ game }) {
           </Typography>
         </Box>
 
-        <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-          <Button
-            component={Link}
-            to={`/games/${game.id}`}
-            variant="contained"
-            sx={{
-              backgroundColor: "#66c0f4",
-              color: "#0b1a24",
-              fontWeight: 700,
-              "&:hover": { backgroundColor: "#8fd7ff" },
-            }}
-          >
-            Läs mer
-          </Button>
+        <Box sx={{ mt: "auto" }}>
+          {game.price ? (
+            <Typography variant="h5" sx={{ color: "#57cc99", fontWeight: 900, mb: 2 }}>
+              {game.price} kr
+            </Typography>
+          ) : (
+            <Typography variant="h5" sx={{ color: "#8fa7ba", fontWeight: 900, mb: 2 }}>
+              Inget pris
+            </Typography>
+          )}
 
-          <Button
-            component={Link}
-            to={`/games/edit/${game.id}`}
-            variant="outlined"
-            sx={{
-              color: "#c7d5e0",
-              borderColor: "rgba(255,255,255,0.2)",
-              "&:hover": { borderColor: "#66c0f4", color: "#66c0f4" },
-            }}
-          >
-            Redigera
-          </Button>
-        </Stack>
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="contained"
+              startIcon={<ShoppingCartIcon />}
+              onClick={handleAddToCart}
+              sx={{
+                backgroundColor: "#57cc99",
+                color: "#0b1a24",
+                fontWeight: 700,
+                flex: 1,
+                "&:hover": { backgroundColor: "#3dba83" },
+              }}
+            >
+              Köp nu
+            </Button>
+            <Button
+              component={Link}
+              to={`/games/${game.id}`}
+              variant="outlined"
+              sx={{
+                color: "#c7d5e0",
+                borderColor: "rgba(255,255,255,0.2)",
+                "&:hover": { borderColor: "#66c0f4", color: "#66c0f4" },
+              }}
+            >
+              Info
+            </Button>
+          </Stack>
+        </Box>
       </CardContent>
     </Card>
   );

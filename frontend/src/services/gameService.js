@@ -13,6 +13,14 @@ const getReviewsByGameId = (gameId) => api.get(`/reviews/${gameId}`);
 const createReview = (reviewData) => api.post("/reviews", reviewData);
 const deleteReview = (id) => api.delete(`/reviews/${id}`);
 
+const getRatingsByGameId = (gameId) => api.get(`/ratings/${gameId}`);
+const createRating = (ratingData) => api.post("/ratings", ratingData);
+
+const getCart = (userId) => api.get(`/cart/${userId}`);
+const addToCart = (userId, gameId, amount) => api.post("/cart/add", { userId, gameId, amount });
+const removeFromCart = (userId, gameId) => api.delete("/cart/remove", { data: { userId, gameId } });
+const clearCart = (userId) => api.delete(`/cart/clear/${userId}`);
+
 export default {
   getAllGames,
   getGameById,
@@ -24,4 +32,10 @@ export default {
   getReviewsByGameId,
   createReview,
   deleteReview,
+  getRatingsByGameId,
+  createRating,
+  getCart,
+  addToCart,
+  removeFromCart,
+  clearCart,
 };

@@ -1,12 +1,13 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
   const location = useLocation();
 
   const navButtonStyle = (path) => ({
-    color: "#c7d5e0",
     fontWeight: 700,
     borderRadius: "8px",
     px: 2,
@@ -36,11 +37,12 @@ function Navbar() {
             alignItems: "center",
             gap: 1,
             color: "#66c0f4",
+            textDecoration: "none",
           }}
         >
           <SportsEsportsIcon />
-          <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-            Game Library
+          <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 1 }}>
+            GamerZone
           </Typography>
         </Box>
 
@@ -51,8 +53,30 @@ function Navbar() {
           <Button component={Link} to="/games" sx={navButtonStyle("/games")}>
             Spel
           </Button>
-          <Button component={Link} to="/games/add" sx={navButtonStyle("/games/add")}>
+          <Button
+            component={Link}
+            to="/games/add"
+            startIcon={<AddCircleOutlineIcon />}
+            sx={navButtonStyle("/games/add")}
+          >
             Lägg till
+          </Button>
+          <Button
+            component={Link}
+            to="/cart"
+            startIcon={<ShoppingCartIcon />}
+            sx={{
+              ...navButtonStyle("/cart"),
+              backgroundColor: location.pathname === "/cart" ? "#57cc99" : "rgba(87,204,153,0.15)",
+              color: location.pathname === "/cart" ? "#0b1a24" : "#57cc99",
+              border: "1px solid rgba(87,204,153,0.3)",
+              "&:hover": {
+                backgroundColor: "#57cc99",
+                color: "#0b1a24",
+              },
+            }}
+          >
+            Varukorg
           </Button>
         </Box>
       </Toolbar>

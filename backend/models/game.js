@@ -32,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    price: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+    },
   });
 
   return Game;

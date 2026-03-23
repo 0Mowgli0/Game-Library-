@@ -1,3 +1,4 @@
+// EditGame.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
@@ -16,11 +17,10 @@ function EditGame() {
     title: "",
     genreId: "",
     platformId: "",
-    status: "Planerar",
     releaseDate: "",
     image: "",
     description: "",
-    rating: null,
+    price: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -37,11 +37,10 @@ function EditGame() {
           title: game.title || "",
           genreId: game.genreId || "",
           platformId: game.platformId || "",
-          status: game.status || "Planerar",
           releaseDate: game.releaseDate ? game.releaseDate.split("T")[0] : "",
           image: game.image || "",
           description: game.description || "",
-          rating: game.rating || null,
+          price: game.price || "",
         });
       } catch (err) {
         setError("Kunde inte hämta spelet.");
