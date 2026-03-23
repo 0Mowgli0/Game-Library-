@@ -100,14 +100,18 @@ Backend körs nu på `http://localhost:5000`
 cd frontend
 ```
 
+
 Installera dependencies:
 ```bash
 npm install
 ```
+
+installera detta kommando för animationer: 
+```bash
+npm install framer-motion
+```
 ```
 
-installera detta för animationer: 
-npm install framer-motion
 ```
 
 Starta frontend:
