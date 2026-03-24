@@ -9,7 +9,7 @@ Ett personligt spelbibliotek där du kan samla, organisera och hålla koll på d
 Se till att du har följande installerat innan du kör projektet:
 
 - [Node.js](https://nodejs.org/) (v18 eller senare)
-- [MySQL](https://www.mysql.com/) — installera MySQL Server + MySQL Workbench
+- [MySQL](https://dev.mysql.com/downloads/installer/) Ta denna Windows (x86, 32-bit), MSI Installer — installera MySQL Server + MySQL Workbench
 - [Git](https://git-scm.com/) eller [GitHub Desktop](https://desktop.github.com/)
 
 ---
