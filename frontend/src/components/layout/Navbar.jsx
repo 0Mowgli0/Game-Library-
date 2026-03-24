@@ -8,6 +8,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import PersonIcon from "@mui/icons-material/Person";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useCart } from "../../context/CartContext";
@@ -79,6 +80,14 @@ function Navbar() {
             sx={navButtonStyle("/games/add")}
           >
             Lägg till
+          </Button>
+          <Button
+            component={Link}
+            to="/orders"
+            startIcon={<ReceiptIcon />}
+            sx={navButtonStyle("/orders")}
+          >
+            Ordrar
           </Button>
           <Button
             component={Link}

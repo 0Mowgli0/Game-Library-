@@ -1,15 +1,17 @@
-// CartPage.jsx - byt ut USER_ID mot currentUser
 import { useEffect, useState } from "react";
 import {
-  Box, Typography, Button, Paper, Stack, Divider, IconButton, TextField, useTheme,
+  Box, Typography, Button, Paper, Stack, Divider, IconButton, TextField, useTheme, Chip, InputAdornment,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
+import PaymentIcon from "@mui/icons-material/Payment";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PageContainer from "../components/layout/PageContainer";
 import Loading from "../components/common/Loading";
 import gameService from "../services/gameService";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSnackbar } from "../context/SnackbarContext";
 import { useCart } from "../context/CartContext";
 import { useUser } from "../context/UserContext";
@@ -18,11 +20,24 @@ import { motion, AnimatePresence } from "framer-motion";
 function CartPage() {
   const [cart, setCart] = useState({ games: [], total: 0 });
   const [loading, setLoading] = useState(true);
+  const [paying, setPaying] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState(null);
+  const [discountLoading, setDiscountLoading] = useState(false);
   const { showSnackbar } = useSnackbar();
   const { fetchCartCount } = useCart();
   const { currentUser } = useUser();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
+  const navigate = useNavigate();
+
+  const discountedTotal = appliedDiscount
+    ? Math.round(cart.total * (1 - appliedDiscount.percentage / 100))
+    : cart.total;
+
+  const savedAmount = appliedDiscount
+    ? cart.total - discountedTotal
+    : 0;
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -66,11 +81,69 @@ function CartPage() {
     try {
       await gameService.clearCart(currentUser.id);
       setCart({ games: [], total: 0 });
+      setAppliedDiscount(null);
+      setDiscountCode("");
       fetchCartCount();
       showSnackbar("Varukorgen är tömd", "info");
     } catch (err) {
       showSnackbar("Kunde inte tömma varukorg", "error");
     }
+  };
+
+  const handleApplyDiscount = async () => {
+    if (!discountCode.trim()) return;
+    setDiscountLoading(true);
+    try {
+      const res = await gameService.validateDiscount(discountCode.trim());
+      setAppliedDiscount(res.data);
+      showSnackbar(`Rabattkod aktiverad! ${res.data.percentage}% rabatt!`, "success");
+    } catch (err) {
+      showSnackbar("Ogiltig eller inaktiv rabattkod", "error");
+      setAppliedDiscount(null);
+    } finally {
+      setDiscountLoading(false);
+    }
+  };
+
+  const handleRemoveDiscount = () => {
+    setAppliedDiscount(null);
+    setDiscountCode("");
+    showSnackbar("Rabattkod borttagen", "info");
+  };
+
+  const handlePay = async () => {
+    setPaying(true);
+    try {
+      const res = await gameService.payCart(currentUser.id);
+      const orderWithDiscount = {
+        ...res.data,
+        total: discountedTotal,
+        discount: appliedDiscount,
+        savedAmount,
+      };
+      setCart({ games: [], total: 0 });
+      setAppliedDiscount(null);
+      setDiscountCode("");
+      fetchCartCount();
+      showSnackbar("Betalning genomförd!", "success");
+      navigate("/order-confirmation", { state: { order: orderWithDiscount } });
+    } catch (err) {
+      showSnackbar("Kunde inte genomföra betalning", "error");
+    } finally {
+      setPaying(false);
+    }
+  };
+
+  const textFieldStyles = {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: isDark ? "#2a475e" : "#ffffff",
+      color: theme.palette.text.primary,
+      borderRadius: "10px",
+    },
+    "& .MuiInputLabel-root": { color: theme.palette.text.secondary },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+    },
   };
 
   if (loading) return <PageContainer><Loading /></PageContainer>;
@@ -280,7 +353,76 @@ function CartPage() {
                 ))}
               </AnimatePresence>
 
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 3 }}>
+              {/* Rabattkod */}
+              <Box sx={{ mt: 3, mb: 3 }}>
+                <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 1, fontWeight: 700 }}>
+                  Rabattkod
+                </Typography>
+                {appliedDiscount ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Chip
+                        icon={<CheckCircleIcon sx={{ color: "#57cc99 !important" }} />}
+                        label={`${appliedDiscount.code} — ${appliedDiscount.percentage}% rabatt`}
+                        onDelete={handleRemoveDiscount}
+                        sx={{
+                          backgroundColor: "rgba(87,204,153,0.15)",
+                          color: "#57cc99",
+                          fontWeight: 700,
+                          border: "1px solid rgba(87,204,153,0.3)",
+                          "& .MuiChip-deleteIcon": { color: "#57cc99" },
+                        }}
+                      />
+                      <Typography variant="body2" sx={{ color: "#57cc99", fontWeight: 700 }}>
+                        Du sparar {savedAmount} kr!
+                      </Typography>
+                    </Stack>
+                  </motion.div>
+                ) : (
+                  <Stack direction="row" spacing={1}>
+                    <TextField
+                      placeholder="Ange rabattkod..."
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                      onKeyDown={(e) => e.key === "Enter" && handleApplyDiscount()}
+                      size="small"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LocalOfferIcon sx={{ color: theme.palette.text.secondary, fontSize: 18 }} />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{ ...textFieldStyles, flex: 1 }}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={handleApplyDiscount}
+                      disabled={discountLoading || !discountCode.trim()}
+                      sx={{
+                        color: "#66c0f4",
+                        borderColor: "rgba(102,192,244,0.4)",
+                        fontWeight: 700,
+                        borderRadius: "10px",
+                        "&:hover": {
+                          borderColor: "#66c0f4",
+                          backgroundColor: "rgba(102,192,244,0.1)",
+                        },
+                      }}
+                    >
+                      {discountLoading ? "Kollar..." : "Använd"}
+                    </Button>
+                  </Stack>
+                )}
+              </Box>
+
+              <Divider sx={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)", mb: 3 }} />
+
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Button
                     onClick={handleClear}
@@ -298,13 +440,61 @@ function CartPage() {
                     Töm varukorg
                   </Button>
                 </motion.div>
+
                 <Box sx={{ textAlign: "right" }}>
                   <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
                     Totalt ({cart.games.reduce((acc, g) => acc + g.amount, 0)} st)
                   </Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 900, color: "#57cc99" }}>
-                    {cart.total} kr
+
+                  {appliedDiscount && (
+                    <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        {cart.total} kr
+                      </Typography>
+                      <Chip
+                        label={`-${appliedDiscount.percentage}%`}
+                        size="small"
+                        sx={{
+                          backgroundColor: "rgba(87,204,153,0.15)",
+                          color: "#57cc99",
+                          fontWeight: 700,
+                          fontSize: "0.75rem",
+                        }}
+                      />
+                    </Stack>
+                  )}
+
+                  <Typography variant="h5" sx={{ fontWeight: 900, color: "#57cc99", mb: 2 }}>
+                    {discountedTotal} kr
                   </Typography>
+
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      startIcon={<PaymentIcon />}
+                      onClick={handlePay}
+                      disabled={paying}
+                      sx={{
+                        backgroundColor: "#57cc99",
+                        color: "#0b1a24",
+                        fontWeight: 800,
+                        px: 4,
+                        py: 1.5,
+                        borderRadius: "12px",
+                        "&:hover": { backgroundColor: "#3dba83" },
+                        "&:disabled": { backgroundColor: "rgba(87,204,153,0.4)" },
+                      }}
+                    >
+                      {paying ? "Behandlar..." : "Betala nu"}
+                    </Button>
+                  </motion.div>
                 </Box>
               </Stack>
             </Paper>

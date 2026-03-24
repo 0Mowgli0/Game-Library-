@@ -89,6 +89,7 @@ function Footer() {
                 { label: "Hem", to: "/" },
                 { label: "Butik", to: "/games" },
                 { label: "Varukorg", to: "/cart" },
+                { label: "Mina ordrar", to: "/orders" },
                 { label: "Lägg till spel", to: "/games/add" },
               ].map((link) => (
                 <Link

@@ -9,6 +9,7 @@ const reviewsRoute = require("./routes/reviewsRoute");
 const usersRoute = require("./routes/usersRoute");
 const ratingsRoute = require("./routes/ratingsRoute");
 const cartRoute = require("./routes/cartRoute");
+const discountsRoute = require("./routes/discountsRoute");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/reviews", reviewsRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/ratings", ratingsRoute);
 app.use("/api/cart", cartRoute);
+app.use("/api/discounts", discountsRoute);
 
 app.get("/", (req, res) => {
   res.send("API is running");
@@ -30,6 +32,6 @@ app.get("/", (req, res) => {
 const PORT = 5000;
 
 app.listen(PORT, async () => {
-  await sequelize.sync();
+  await sequelize.sync({ alter: true });
   console.log(`Server running on http://localhost:${PORT}`);
 });

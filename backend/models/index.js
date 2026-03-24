@@ -25,8 +25,9 @@ db.User = require("./user")(sequelize, DataTypes);
 db.Cart = require("./cart")(sequelize, DataTypes);
 db.CartRow = require("./cartRow")(sequelize, DataTypes);
 db.Rating = require("./rating")(sequelize, DataTypes);
+db.Discount = require("./discount")(sequelize, DataTypes);
 
-// Game associations
+// Associations
 db.Platform.hasMany(db.Game, { foreignKey: "platformId" });
 db.Game.belongsTo(db.Platform, { foreignKey: "platformId" });
 
@@ -39,7 +40,6 @@ db.Review.belongsTo(db.Game, { foreignKey: "gameId" });
 db.Game.hasMany(db.Rating, { foreignKey: "gameId" });
 db.Rating.belongsTo(db.Game, { foreignKey: "gameId" });
 
-// Cart associations
 db.User.hasMany(db.Cart, { foreignKey: "userId" });
 db.Cart.belongsTo(db.User, { foreignKey: "userId" });
 

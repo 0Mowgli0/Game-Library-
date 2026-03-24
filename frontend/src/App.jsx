@@ -9,6 +9,8 @@ import GameDetail from "./pages/GameDetail";
 import AddGame from "./pages/AddGame";
 import EditGame from "./pages/EditGame";
 import CartPage from "./pages/CartPage";
+import OrderConfirmation from "./pages/OrderConfirmation";
+import OrdersPage from "./pages/OrdersPage";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           <Route path="/games/add" element={<AddGame />} />
           <Route path="/games/edit/:id" element={<EditGame />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="/orders" element={<OrdersPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>

@@ -166,3 +166,9 @@ Om databasen också uppdaterats, importera den igen med kommandot i steg 3.
 - `.env.example` ska alltid vara uppdaterad med rätt variabelnamn men utan riktiga värden
 
 //
+
+Test av rabbtkod: 
+koder: 
+GAMER10 = 10% 
+GAMER20 = 20%
+HALF50 = 50%

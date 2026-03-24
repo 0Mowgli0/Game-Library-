@@ -21,6 +21,16 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.post("/pay/:userId", async (req, res) => {
+  try {
+    const order = await cartService.payCart(req.params.userId);
+    if (!order) return res.status(404).json({ message: "Ingen aktiv varukorg" });
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ message: "Kunde inte genomföra betalning" });
+  }
+});
+
 router.delete("/remove", async (req, res) => {
   try {
     const { userId, gameId } = req.body;
@@ -37,6 +47,15 @@ router.delete("/clear/:userId", async (req, res) => {
     res.json({ message: "Varukorgen tömd" });
   } catch (error) {
     res.status(500).json({ message: "Kunde inte tömma varukorgen" });
+  }
+});
+
+router.get("/orders/:userId", async (req, res) => {
+  try {
+    const orders = await cartService.getOrderHistory(req.params.userId);
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Kunde inte hämta orderhistorik" });
   }
 });
 
