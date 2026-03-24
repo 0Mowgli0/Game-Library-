@@ -36,6 +36,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       allowNull: true,
     },
+    originalPrice: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+    },
+    salePercentage: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    onSale: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   return Game;

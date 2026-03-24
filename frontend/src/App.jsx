@@ -11,6 +11,9 @@ import EditGame from "./pages/EditGame";
 import CartPage from "./pages/CartPage";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import OrdersPage from "./pages/OrdersPage";
+import SalePage from "./pages/SalePage";
+import ReviewsPage from "./pages/ReviewsPage";
+import InfoPage from "./pages/InfoPage";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -28,6 +31,9 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/sale" element={<SalePage />} />
+          <Route path="/reviews" element={<ReviewsPage />} />
+          <Route path="/info" element={<InfoPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>

@@ -21,15 +21,14 @@ const addToCart = (userId, gameId, amount) => api.post("/cart/add", { userId, ga
 const removeFromCart = (userId, gameId) => api.delete("/cart/remove", { data: { userId, gameId } });
 const clearCart = (userId) => api.delete(`/cart/clear/${userId}`);
 const payCart = (userId) => api.post(`/cart/pay/${userId}`);
+const getRecommendations = (userId) => api.get(`/cart/recommendations/${userId}`);
 
 const getAllUsers = () => api.get("/users");
-
 const getOrderHistory = (userId) => api.get(`/cart/orders/${userId}`);
 const validateDiscount = (code) => api.get(`/discounts/validate/${code}`);
 
 export default {
   getAllGames,
-  validateDiscount,
   getGameById,
   createGame,
   updateGame,
@@ -46,6 +45,8 @@ export default {
   removeFromCart,
   clearCart,
   payCart,
+  getRecommendations,
   getAllUsers,
   getOrderHistory,
+  validateDiscount,
 };

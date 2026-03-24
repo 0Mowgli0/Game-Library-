@@ -13,19 +13,19 @@ const features = [
     icon: <LocalOfferIcon sx={{ fontSize: 32, color: "#57cc99" }} />,
     title: "Bästa priserna",
     desc: "Vi erbjuder konkurrenskraftiga priser på alla spel.",
-    to: "/games?sort=price",
+    to: "/sale",
   },
   {
     icon: <StarIcon sx={{ fontSize: 32, color: "#66c0f4" }} />,
     title: "Toppbetyg",
     desc: "Läs recensioner och betyg från andra spelare.",
-    to: "/games?sort=rating",
+    to: "/reviews",
   },
   {
     icon: <SecurityIcon sx={{ fontSize: 32, color: "#f4a261" }} />,
     title: "Trygg handel",
     desc: "Säker och enkel handel med snabb leverans.",
-    to: "/games",
+    to: "/info",
   },
 ];
 

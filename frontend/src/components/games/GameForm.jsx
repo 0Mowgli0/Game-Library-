@@ -1,4 +1,3 @@
-// GameForm.jsx
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -8,7 +7,13 @@ import {
   Typography,
   InputAdornment,
   useTheme,
+  Switch,
+  FormControlLabel,
+  Divider,
+  Stack,
+  Chip,
 } from "@mui/material";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import gameService from "../../services/gameService";
 
 function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
@@ -37,6 +42,10 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
   }, []);
 
   if (loadingOptions) return null;
+
+  const salePrice = formData.onSale && formData.price && formData.salePercentage
+    ? Math.round(formData.price * (1 - formData.salePercentage / 100))
+    : null;
 
   const textFieldStyles = {
     mb: 2,
@@ -126,7 +135,7 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
 
       <TextField
         fullWidth
-        label="Pris"
+        label="Ordinarie pris"
         name="price"
         type="number"
         value={formData.price}
@@ -136,6 +145,104 @@ function GameForm({ formData, handleChange, handleSubmit, buttonText }) {
         }}
         sx={textFieldStyles}
       />
+
+      {/* REA-sektion */}
+      <Divider sx={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", mb: 2 }} />
+
+      <Box
+        sx={{
+          p: 3,
+          mb: 2,
+          borderRadius: "12px",
+          background: formData.onSale
+            ? isDark ? "rgba(87,204,153,0.08)" : "rgba(87,204,153,0.05)"
+            : isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)",
+          border: formData.onSale
+            ? "1px solid rgba(87,204,153,0.3)"
+            : isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
+          transition: "all 0.3s ease",
+        }}
+      >
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: formData.onSale ? 2 : 0 }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <LocalOfferIcon sx={{ color: formData.onSale ? "#57cc99" : theme.palette.text.secondary, fontSize: 20 }} />
+            <Typography sx={{ fontWeight: 700, color: formData.onSale ? "#57cc99" : theme.palette.text.secondary }}>
+              Rea-pris
+            </Typography>
+            {formData.onSale && (
+              <Chip
+                label="AKTIV"
+                size="small"
+                sx={{ backgroundColor: "rgba(87,204,153,0.2)", color: "#57cc99", fontWeight: 700, fontSize: "0.7rem" }}
+              />
+            )}
+          </Stack>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={!!formData.onSale}
+                onChange={(e) => handleChange({ target: { name: "onSale", value: e.target.checked } })}
+                sx={{
+                  "& .MuiSwitch-switchBase.Mui-checked": { color: "#57cc99" },
+                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#57cc99" },
+                }}
+              />
+            }
+            label=""
+          />
+        </Stack>
+
+        {formData.onSale && (
+          <Box>
+            <TextField
+              fullWidth
+              label="Rabatt (%)"
+              name="salePercentage"
+              type="number"
+              value={formData.salePercentage || ""}
+              onChange={handleChange}
+              inputProps={{ min: 1, max: 99 }}
+              InputProps={{
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+              }}
+              sx={textFieldStyles}
+            />
+
+            {salePrice && (
+              <Box
+                sx={{
+                  p: 2,
+                  borderRadius: "10px",
+                  background: isDark ? "rgba(87,204,153,0.1)" : "rgba(87,204,153,0.08)",
+                  border: "1px solid rgba(87,204,153,0.2)",
+                }}
+              >
+                <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 0.5 }}>
+                  Förhandsvisning:
+                </Typography>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <Typography
+                    variant="body1"
+                    sx={{ color: theme.palette.text.secondary, textDecoration: "line-through" }}
+                  >
+                    {formData.price} kr
+                  </Typography>
+                  <Chip
+                    label={`-${formData.salePercentage}%`}
+                    size="small"
+                    sx={{ backgroundColor: "#57cc99", color: "#0b1a24", fontWeight: 800 }}
+                  />
+                  <Typography variant="h6" sx={{ color: "#57cc99", fontWeight: 900 }}>
+                    {salePrice} kr
+                  </Typography>
+                </Stack>
+              </Box>
+            )}
+          </Box>
+        )}
+      </Box>
+
+      <Divider sx={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", mb: 2 }} />
 
       <TextField
         fullWidth

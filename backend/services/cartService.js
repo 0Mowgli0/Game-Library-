@@ -1,4 +1,5 @@
-const { Cart, CartRow, Game } = require("../models");
+const { Cart, CartRow, Game, Platform, Genre } = require("../models");
+const { Op } = require("sequelize");
 
 async function getOrCreateCart(userId) {
   const [cart] = await Cart.findOrCreate({
@@ -77,7 +78,6 @@ async function payCart(userId) {
   }));
 
   const total = games.reduce((acc, g) => acc + g.subtotal, 0);
-
   await cart.update({ payed: true });
 
   return { cartId: cart.id, games, total };
@@ -109,6 +109,61 @@ async function getOrderHistory(userId) {
   });
 }
 
+async function getRecommendations(userId) {
+  const cart = await Cart.findOne({
+    where: { userId, payed: false },
+    include: [{ model: Game, through: { attributes: ["amount"] } }],
+  });
+
+  if (!cart || cart.Games.length === 0) {
+    // Om varukorgen är tom, returnera slumpmässiga spel
+    const randomGames = await Game.findAll({
+      include: [{ model: Platform }, { model: Genre }],
+      order: [["createdAt", "DESC"]],
+      limit: 4,
+    });
+    return randomGames;
+  }
+
+  // Hämta genres och ids från spel i varukorgen
+  const cartGameIds = cart.Games.map((g) => g.id);
+  const cartGenreIds = cart.Games
+    .map((g) => g.genreId)
+    .filter((id) => id !== null);
+
+  // Hitta unika genres
+  const uniqueGenreIds = [...new Set(cartGenreIds)];
+
+  // Hämta spel med samma genre som INTE redan finns i varukorgen
+  const recommendations = await Game.findAll({
+    where: {
+      id: { [Op.notIn]: cartGameIds },
+      genreId: { [Op.in]: uniqueGenreIds.length > 0 ? uniqueGenreIds : [0] },
+    },
+    include: [{ model: Platform }, { model: Genre }],
+    limit: 4,
+  });
+
+  // Om inte tillräckligt med rekommendationer, fyll på med andra spel
+  if (recommendations.length < 4) {
+    const extraGames = await Game.findAll({
+      where: {
+        id: {
+          [Op.notIn]: [
+            ...cartGameIds,
+            ...recommendations.map((g) => g.id),
+          ],
+        },
+      },
+      include: [{ model: Platform }, { model: Genre }],
+      limit: 4 - recommendations.length,
+    });
+    return [...recommendations, ...extraGames];
+  }
+
+  return recommendations;
+}
+
 module.exports = {
   getCartByUserId,
   addToCart,
@@ -116,4 +171,5 @@ module.exports = {
   clearCart,
   payCart,
   getOrderHistory,
+  getRecommendations,
 };

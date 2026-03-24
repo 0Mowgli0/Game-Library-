@@ -2,6 +2,24 @@ const express = require("express");
 const router = express.Router();
 const cartService = require("../services/cartService");
 
+router.get("/recommendations/:userId", async (req, res) => {
+  try {
+    const recommendations = await cartService.getRecommendations(req.params.userId);
+    res.json(recommendations);
+  } catch (error) {
+    res.status(500).json({ message: "Kunde inte hämta rekommendationer" });
+  }
+});
+
+router.get("/orders/:userId", async (req, res) => {
+  try {
+    const orders = await cartService.getOrderHistory(req.params.userId);
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Kunde inte hämta orderhistorik" });
+  }
+});
+
 router.get("/:userId", async (req, res) => {
   try {
     const cart = await cartService.getCartByUserId(req.params.userId);
@@ -47,15 +65,6 @@ router.delete("/clear/:userId", async (req, res) => {
     res.json({ message: "Varukorgen tömd" });
   } catch (error) {
     res.status(500).json({ message: "Kunde inte tömma varukorgen" });
-  }
-});
-
-router.get("/orders/:userId", async (req, res) => {
-  try {
-    const orders = await cartService.getOrderHistory(req.params.userId);
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ message: "Kunde inte hämta orderhistorik" });
   }
 });
 
