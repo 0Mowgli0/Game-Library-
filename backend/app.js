@@ -10,6 +10,7 @@ const usersRoute = require("./routes/usersRoute");
 const ratingsRoute = require("./routes/ratingsRoute");
 const cartRoute = require("./routes/cartRoute");
 const discountsRoute = require("./routes/discountsRoute");
+const storeReviewsRoute = require("./routes/storeReviewsRoute");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/users", usersRoute);
 app.use("/api/ratings", ratingsRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/discounts", discountsRoute);
+app.use("/api/store-reviews", storeReviewsRoute);
 
 app.get("/", (req, res) => {
   res.send("API is running");

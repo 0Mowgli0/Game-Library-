@@ -1,4 +1,4 @@
-// GameCard.jsx - ändra USER_ID till useUser
+// GameCard.jsx
 import {
   Card,
   CardContent,
@@ -11,6 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import gameService from "../../services/gameService";
@@ -24,6 +25,10 @@ function GameCard({ game }) {
   const { currentUser } = useUser();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
+
+  const salePrice = game.onSale && game.price && game.salePercentage
+    ? Math.round(game.price * (1 - game.salePercentage / 100))
+    : null;
 
   const handleAddToCart = async () => {
     if (!currentUser) {
@@ -72,7 +77,8 @@ function GameCard({ game }) {
           },
         }}
       >
-        <Box sx={{ overflow: "hidden" }}>
+        {/* Bild med REA-badge */}
+        <Box sx={{ overflow: "hidden", position: "relative" }}>
           <CardMedia
             component="img"
             height="200"
@@ -83,6 +89,28 @@ function GameCard({ game }) {
               "&:hover": { transform: "scale(1.08)" },
             }}
           />
+          {game.onSale && salePrice && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 12,
+                left: 12,
+                backgroundColor: "#57cc99",
+                color: "#0b1a24",
+                fontWeight: 900,
+                fontSize: "0.8rem",
+                px: 1.5,
+                py: 0.5,
+                borderRadius: "8px",
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+              }}
+            >
+              <LocalOfferIcon sx={{ fontSize: 14 }} />
+              -{game.salePercentage}%
+            </Box>
+          )}
         </Box>
 
         <CardContent sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
@@ -116,9 +144,28 @@ function GameCard({ game }) {
 
           <Box sx={{ mt: "auto" }}>
             {game.price ? (
-              <Typography variant="h5" sx={{ color: "#57cc99", fontWeight: 900, mb: 2 }}>
-                {game.price} kr
-              </Typography>
+              <Box sx={{ mb: 2 }}>
+                {game.onSale && salePrice ? (
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        textDecoration: "line-through",
+                      }}
+                    >
+                      {game.price} kr
+                    </Typography>
+                    <Typography variant="h5" sx={{ color: "#57cc99", fontWeight: 900 }}>
+                      {salePrice} kr
+                    </Typography>
+                  </Stack>
+                ) : (
+                  <Typography variant="h5" sx={{ color: "#57cc99", fontWeight: 900 }}>
+                    {game.price} kr
+                  </Typography>
+                )}
+              </Box>
             ) : (
               <Typography variant="h5" sx={{ color: theme.palette.text.secondary, fontWeight: 900, mb: 2 }}>
                 Inget pris

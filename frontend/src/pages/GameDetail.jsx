@@ -1,4 +1,4 @@
-// GameDetail.jsx - byt ut USER_ID mot currentUser
+// GameDetail.jsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -6,6 +6,7 @@ import {
   TextField, Divider, Paper, useTheme,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PageContainer from "../components/layout/PageContainer";
 import Loading from "../components/common/Loading";
 import ErrorMessage from "../components/common/ErrorMessage";
@@ -106,6 +107,9 @@ function GameDetail() {
   if (!game) return <PageContainer><ErrorMessage message="Spelet hittades inte." /></PageContainer>;
 
   const imageSrc = game.image || "https://placehold.co/1000x500?text=Game";
+  const salePrice = game.onSale && game.price && game.salePercentage
+    ? Math.round(game.price * (1 - game.salePercentage / 100))
+    : null;
 
   const textFieldStyles = {
     mb: 2,
@@ -146,20 +150,44 @@ function GameDetail() {
             : "0 12px 28px rgba(0,0,0,0.08)",
         }}
       >
-        <Box
-          component="img"
-          src={imageSrc}
-          alt={game.title}
-          onError={(e) => { e.target.src = "https://placehold.co/1000x500?text=Game"; }}
-          sx={{
-            width: "100%",
-            maxHeight: 420,
-            objectFit: "cover",
-            borderRadius: "14px",
-            mb: 3,
-            backgroundColor: isDark ? "#2a475e" : "#e0eaf5",
-          }}
-        />
+        {/* Bild med REA-badge */}
+        <Box sx={{ position: "relative", mb: 3 }}>
+          <Box
+            component="img"
+            src={imageSrc}
+            alt={game.title}
+            onError={(e) => { e.target.src = "https://placehold.co/1000x500?text=Game"; }}
+            sx={{
+              width: "100%",
+              maxHeight: 420,
+              objectFit: "cover",
+              borderRadius: "14px",
+              backgroundColor: isDark ? "#2a475e" : "#e0eaf5",
+            }}
+          />
+          {game.onSale && salePrice && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 16,
+                left: 16,
+                backgroundColor: "#57cc99",
+                color: "#0b1a24",
+                fontWeight: 900,
+                fontSize: "1rem",
+                px: 2,
+                py: 0.8,
+                borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              <LocalOfferIcon sx={{ fontSize: 18 }} />
+              REA -{game.salePercentage}%
+            </Box>
+          )}
+        </Box>
 
         <Typography variant="h3" sx={{ fontWeight: 900, mb: 2, color: theme.palette.text.primary }}>
           {game.title}
@@ -177,12 +205,40 @@ function GameDetail() {
               color: theme.palette.text.secondary,
             }}
           />
+          {game.onSale && (
+            <Chip
+              label="REA"
+              icon={<LocalOfferIcon sx={{ fontSize: "16px !important", color: "#0b1a24 !important" }} />}
+              sx={{ backgroundColor: "#57cc99", color: "#0b1a24", fontWeight: 700 }}
+            />
+          )}
         </Stack>
 
+        {/* Pris */}
         {game.price && (
-          <Typography variant="h5" sx={{ color: "#57cc99", fontWeight: 800, mb: 3 }}>
-            {game.price} kr
-          </Typography>
+          <Box sx={{ mb: 3 }}>
+            {game.onSale && salePrice ? (
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.palette.text.secondary, textDecoration: "line-through" }}
+                >
+                  {game.price} kr
+                </Typography>
+                <Chip
+                  label={`-${game.salePercentage}%`}
+                  sx={{ backgroundColor: "#57cc99", color: "#0b1a24", fontWeight: 800 }}
+                />
+                <Typography variant="h4" sx={{ color: "#57cc99", fontWeight: 900 }}>
+                  {salePrice} kr
+                </Typography>
+              </Stack>
+            ) : (
+              <Typography variant="h5" sx={{ color: "#57cc99", fontWeight: 800 }}>
+                {game.price} kr
+              </Typography>
+            )}
+          </Box>
         )}
 
         {/* Snittbetyg */}

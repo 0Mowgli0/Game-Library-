@@ -27,6 +27,8 @@ function EditGame() {
     image: "",
     description: "",
     price: "",
+    onSale: false,
+    salePercentage: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -47,6 +49,8 @@ function EditGame() {
           image: game.image || "",
           description: game.description || "",
           price: game.price || "",
+          onSale: game.onSale || false,
+          salePercentage: game.salePercentage || "",
         });
       } catch (err) {
         setError("Kunde inte hämta spelet.");

@@ -27,6 +27,10 @@ const getAllUsers = () => api.get("/users");
 const getOrderHistory = (userId) => api.get(`/cart/orders/${userId}`);
 const validateDiscount = (code) => api.get(`/discounts/validate/${code}`);
 
+const getAllStoreReviews = () => api.get("/store-reviews");
+const createStoreReview = (data) => api.post("/store-reviews", data);
+const deleteStoreReview = (id) => api.delete(`/store-reviews/${id}`);
+
 export default {
   getAllGames,
   getGameById,
@@ -49,4 +53,7 @@ export default {
   getAllUsers,
   getOrderHistory,
   validateDiscount,
+  getAllStoreReviews,
+  createStoreReview,
+  deleteStoreReview,
 };

@@ -26,6 +26,7 @@ db.Cart = require("./cart")(sequelize, DataTypes);
 db.CartRow = require("./cartRow")(sequelize, DataTypes);
 db.Rating = require("./rating")(sequelize, DataTypes);
 db.Discount = require("./discount")(sequelize, DataTypes);
+db.StoreReview = require("./storeReview")(sequelize, DataTypes);
 
 // Associations
 db.Platform.hasMany(db.Game, { foreignKey: "platformId" });

@@ -17,6 +17,8 @@ function AddGame() {
     image: "",
     description: "",
     price: "",
+    onSale: false,
+    salePercentage: "",
   });
 
   const handleChange = (e) => {

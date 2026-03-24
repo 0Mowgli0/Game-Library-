@@ -11,7 +11,7 @@ import PageContainer from "../components/layout/PageContainer";
 const features = [
   {
     icon: <LocalOfferIcon sx={{ fontSize: 32, color: "#57cc99" }} />,
-    title: "Bästa priserna",
+    title: "Produkter på rea",
     desc: "Vi erbjuder konkurrenskraftiga priser på alla spel.",
     to: "/sale",
   },

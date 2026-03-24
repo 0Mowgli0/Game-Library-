@@ -19,10 +19,10 @@ function SalePage() {
     const fetchGames = async () => {
       try {
         const res = await gameService.getAllGames();
-        const sorted = res.data
-          .filter((g) => g.price)
-          .sort((a, b) => a.price - b.price);
-        setGames(sorted);
+        const onSale = res.data
+          .filter((g) => g.onSale && g.price && g.salePercentage)
+          .sort((a, b) => b.salePercentage - a.salePercentage);
+        setGames(onSale);
       } catch (err) {
         console.error("Kunde inte hämta spel", err);
       } finally {
@@ -68,8 +68,13 @@ function SalePage() {
             </Typography>
           </Box>
           <Typography variant="body1" sx={{ color: isDark ? "#8fa7ba" : "#2d5a2d", maxWidth: 500 }}>
-            Här hittar du alla våra spel sorterade från lägsta pris — alltid bästa deals!
+            Här hittar du alla spel som just nu är på rea — sorterade efter högst rabatt!
           </Typography>
+          {!loading && (
+            <Typography variant="body2" sx={{ color: "#57cc99", fontWeight: 700, mt: 1 }}>
+              {games.length} spel på rea just nu
+            </Typography>
+          )}
         </motion.div>
       </Box>
 
@@ -80,9 +85,10 @@ function SalePage() {
             { label: "Bästa priserna" },
           ]}
         />
+
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <Typography variant="h5" sx={{ fontWeight: 800, color: theme.palette.text.primary }}>
-            Alla spel — lägsta pris först
+            Spel på rea
           </Typography>
           <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
             {games.length} spel
@@ -90,7 +96,9 @@ function SalePage() {
         </Box>
 
         {loading && <GameListSkeleton />}
-        {!loading && games.length === 0 && <EmptyState message="Inga spel hittades." />}
+        {!loading && games.length === 0 && (
+          <EmptyState message="Inga spel på rea just nu — kolla tillbaka senare!" />
+        )}
         {!loading && games.length > 0 && <GameList games={games} />}
       </PageContainer>
     </Box>
