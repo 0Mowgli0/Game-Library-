@@ -127,14 +127,11 @@ Frontend körs nu på `http://localhost:5173`
 
 ### Om du lagt till/ändrat/tagit bort spel och vill att andra ska se det:
 
-Exportera databasen genom att stå i **projektets rotmapp**.
+Exportera databasen genom att stå i **projektets rotmapp** i command prompten i visual studio code.
 
-**Windows (PowerShell):**
+**Windows (command promt):**
 ```bash
-mysqldump --default-character-set=utf8mb4 -u root -p game_library | Out-File -Encoding utf8 game_library.sql
-
 mysqldump --default-character-set=utf8mb4 -u root -p game_library > game_library.sql
-
 
 ```
 - OBS!!! Om `mysql` inte känns igen i PowerShell, lägg till MySQL i PATH:

@@ -1,4 +1,3 @@
-// AddGame.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
@@ -31,7 +30,12 @@ function AddGame() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await gameService.createGame(formData);
+      const dataToSend = {
+        ...formData,
+        salePercentage: formData.salePercentage === "" ? null : formData.salePercentage,
+        price: formData.price === "" ? null : formData.price,
+      };
+      await gameService.createGame(dataToSend);
       navigate("/games");
     } catch (error) {
       console.error("Fel vid skapande av spel:", error);

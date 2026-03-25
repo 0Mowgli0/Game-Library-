@@ -1,4 +1,3 @@
-// EditGame.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -72,7 +71,12 @@ function EditGame() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await gameService.updateGame(id, formData);
+      const dataToSend = {
+        ...formData,
+        salePercentage: formData.salePercentage === "" ? null : formData.salePercentage,
+        price: formData.price === "" ? null : formData.price,
+      };
+      await gameService.updateGame(id, dataToSend);
       navigate(`/games/${id}`);
     } catch (error) {
       setError("Kunde inte uppdatera spelet.");

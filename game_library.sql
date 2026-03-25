@@ -42,7 +42,7 @@ CREATE TABLE `cartrows` (
 
 LOCK TABLES `cartrows` WRITE;
 /*!40000 ALTER TABLE `cartrows` DISABLE KEYS */;
-INSERT INTO `cartrows` VALUES (1,5,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(1,7,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(1,8,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(2,15,1,'2026-03-23 21:36:58','2026-03-23 21:36:58'),(3,13,1,'2026-03-24 12:10:56','2026-03-24 12:10:56'),(3,14,1,'2026-03-24 12:10:56','2026-03-24 12:10:56'),(3,15,1,'2026-03-24 12:10:56','2026-03-24 12:10:56'),(4,13,1,'2026-03-24 12:11:08','2026-03-24 12:11:08'),(4,14,1,'2026-03-24 12:11:08','2026-03-24 12:11:08'),(4,15,1,'2026-03-24 12:11:07','2026-03-24 12:11:07'),(5,13,1,'2026-03-24 12:12:31','2026-03-24 12:12:31'),(5,14,1,'2026-03-24 12:12:31','2026-03-24 12:12:31'),(5,15,1,'2026-03-24 12:12:30','2026-03-24 12:12:30'),(6,8,1,'2026-03-24 12:16:09','2026-03-24 12:16:09'),(6,12,1,'2026-03-24 12:16:10','2026-03-24 12:16:10'),(6,15,1,'2026-03-24 12:16:07','2026-03-24 12:16:07'),(7,4,1,'2026-03-24 12:16:24','2026-03-24 12:16:24'),(7,5,1,'2026-03-24 12:16:24','2026-03-24 12:16:24'),(7,8,1,'2026-03-24 12:16:25','2026-03-24 12:16:25'),(8,3,1,'2026-03-24 12:40:36','2026-03-24 12:40:36'),(8,14,1,'2026-03-24 12:36:37','2026-03-24 12:36:37'),(8,15,1,'2026-03-24 12:36:36','2026-03-24 12:36:36');
+INSERT INTO `cartrows` VALUES (1,5,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(1,7,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(1,8,1,'2026-03-23 20:05:24','2026-03-23 20:05:24'),(2,15,1,'2026-03-23 21:36:58','2026-03-23 21:36:58'),(3,13,1,'2026-03-24 12:10:56','2026-03-24 12:10:56'),(3,14,1,'2026-03-24 12:10:56','2026-03-24 12:10:56'),(3,15,1,'2026-03-24 12:10:56','2026-03-24 12:10:56'),(4,13,1,'2026-03-24 12:11:08','2026-03-24 12:11:08'),(4,14,1,'2026-03-24 12:11:08','2026-03-24 12:11:08'),(4,15,1,'2026-03-24 12:11:07','2026-03-24 12:11:07'),(5,13,1,'2026-03-24 12:12:31','2026-03-24 12:12:31'),(5,14,1,'2026-03-24 12:12:31','2026-03-24 12:12:31'),(5,15,1,'2026-03-24 12:12:30','2026-03-24 12:12:30'),(6,8,1,'2026-03-24 12:16:09','2026-03-24 12:16:09'),(6,12,1,'2026-03-24 12:16:10','2026-03-24 12:16:10'),(6,15,1,'2026-03-24 12:16:07','2026-03-24 12:16:07'),(7,4,1,'2026-03-24 12:16:24','2026-03-24 12:16:24'),(7,5,1,'2026-03-24 12:16:24','2026-03-24 12:16:24'),(7,8,1,'2026-03-24 12:16:25','2026-03-24 12:16:25'),(8,14,1,'2026-03-24 12:36:37','2026-03-24 12:36:37'),(8,15,1,'2026-03-24 12:36:36','2026-03-24 12:36:36');
 /*!40000 ALTER TABLE `cartrows` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,6 +89,7 @@ CREATE TABLE `carts` (
   CONSTRAINT `carts_ibfk_32` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `carts_ibfk_33` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `carts_ibfk_34` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `carts_ibfk_35` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `carts_ibfk_4` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `carts_ibfk_5` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `carts_ibfk_6` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -139,7 +140,8 @@ CREATE TABLE `discounts` (
   UNIQUE KEY `code_14` (`code`),
   UNIQUE KEY `code_15` (`code`),
   UNIQUE KEY `code_16` (`code`),
-  UNIQUE KEY `code_17` (`code`)
+  UNIQUE KEY `code_17` (`code`),
+  UNIQUE KEY `code_18` (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -256,10 +258,12 @@ CREATE TABLE `games` (
   CONSTRAINT `games_ibfk_76` FOREIGN KEY (`genreId`) REFERENCES `genres` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `games_ibfk_77` FOREIGN KEY (`platformId`) REFERENCES `platforms` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `games_ibfk_78` FOREIGN KEY (`genreId`) REFERENCES `genres` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `games_ibfk_79` FOREIGN KEY (`platformId`) REFERENCES `platforms` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `games_ibfk_8` FOREIGN KEY (`genreId`) REFERENCES `genres` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `games_ibfk_80` FOREIGN KEY (`genreId`) REFERENCES `genres` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `games_ibfk_9` FOREIGN KEY (`platformId`) REFERENCES `platforms` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `Games_platformId_foreign_idx` FOREIGN KEY (`platformId`) REFERENCES `platforms` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -268,7 +272,7 @@ CREATE TABLE `games` (
 
 LOCK TABLES `games` WRITE;
 /*!40000 ALTER TABLE `games` DISABLE KEYS */;
-INSERT INTO `games` VALUES (1,'The Witcher 3 - The wild hunt ','Pausat',2015,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstore-images.s-microsoft.com%2Fimage%2Fapps.53717.65858607118306853.39ed2a08-df0d-4ae1-aee0-c66ffb783a34.80ba72da-abfb-4af6-81f2-a443d12fb870&f=1&nofb=1&ipt=a20bb44db4478e4619bde6cf9911f6d4bb5d61d92d81c483f033922ffd265163','Open world RPG adventure','2026-03-21 18:26:25','2026-03-23 12:50:54',NULL,2,3,300,NULL,NULL,0),(3,'Elden Ring','Klar',2022,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic0.gamerantimages.com%2Fwordpress%2Fwp-content%2Fuploads%2F2023%2F05%2Felden-ring-vyke-cover-1.jpg&f=1&nofb=1&ipt=ca2fad115e699a0a804ec9d558e48388f3b2cf704ae6ab3bb4e2cca8bb591bf3','Fantasy action RPG','2026-03-21 18:26:25','2026-03-24 22:10:20',5,2,3,600,NULL,80,1),(4,'deadlock','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-strapi.deadlock.coach%2Fdeadlock_pc_game_steam_cover_4467759ec6.jpg&f=1&nofb=1&ipt=7b4f905110218438917e93bf5ec57c8f88255fca7d182c5d8911bcca7b01f72d','FPS spel f├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½r ├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬¼ldrar 12+','2026-03-21 19:55:20','2026-03-23 20:47:49',NULL,1,4,100,NULL,NULL,0),(5,'FiFA 26','Klar',NULL,'https://www.fifaultimateteam.it/wp-content/uploads/2025/08/Cover-Bellingham-Musiala-Standard-EA-FC-26.webp','Fotbollspel f├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½r ├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬¼ldrar 8+','2026-03-22 09:34:56','2026-03-23 20:47:23',1,2,2,200,NULL,NULL,0),(7,'Valorant','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.--01k4rNVih9Tc7fG8xl9wHaEK%3Fpid%3DApi&f=1&ipt=453482b3e8eeb690438d24c42470695fb1257cc81ae2ac16862d50f55d108edb&ipo=images','FPS spel f├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½r 12+','2026-03-22 16:59:41','2026-03-23 20:46:44',NULL,1,4,300,NULL,NULL,0),(8,'NHL 26','Planerar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.NRWIAeJkaZAvp1owqAEM1QHaLH%3Fpid%3DApi&f=1&ipt=91e83b860399c10e9f85ca546d0265d154a5e6dc18e510f41c0daa589572554b&ipo=images','Hockey sport spel fÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«Ôö£├ÂÔö£├éÔö¼ÔòØ├ö├Â┬ú├ö├▓├ª├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬╝Ôö¼┬¢r unga och vuxna ','2026-03-23 15:03:41','2026-03-24 22:11:40',NULL,2,2,500,NULL,48,1),(12,'Counter strike 2',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.CXssb09l_NROwY3iGXyFqQHaEK%3Fpid%3DApi&f=1&ipt=15832ed42d7bed3e6a53762faa101bab45e08141d3a81c8b4656a3feb69e0eb9&ipo=images','FPS spel f├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½r 18+','2026-03-23 20:45:29','2026-03-23 20:46:03',NULL,1,4,200,NULL,NULL,0),(13,'Among us ',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.mdxkBtY_smSWmzh7CJ-DHAHaEK%3Fpid%3DApi&f=1&ipt=c227b7c3138590cd9a420f2c3f146b90d7a40e442bc87ae1d43c426ff110e287&ipo=images','stratagy och rollspel f├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½r ├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬¼ldrar 8+','2026-03-23 20:49:18','2026-03-23 20:49:18',NULL,1,6,275,NULL,NULL,0),(14,'liar\'s Bar',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.explicit.bing.net%2Fth%2Fid%2FOIP.iaYBxOh0fQ94zS6pAu1RBQHaLH%3Fpid%3DApi&f=1&ipt=6d0e188551b578ad0bc49256b4c9a6c4f3b5d2d7928a414525b7bac978672ee2&ipo=images','Stratagy spel f├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½r 15+','2026-03-23 20:51:55','2026-03-23 20:51:55',NULL,1,6,150,NULL,NULL,0),(15,'Minecraft',NULL,NULL,'https://dopest.se/_next/image/?url=https%3A%2F%2Fwp.dopest.se%2Fwp-content%2Fuploads%2F2024%2F05%2Fminecraft-history-first-version-ever-timeline-scaled.jpeg&w=3840&q=75','Minecraft för unga och gammla. åäöåäöåäö','2026-03-23 21:36:23','2026-03-25 09:31:22',NULL,1,5,300,NULL,50,1);
+INSERT INTO `games` VALUES (1,'The Witcher 3 - The wild hunt ','Pausat',2015,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstore-images.s-microsoft.com%2Fimage%2Fapps.53717.65858607118306853.39ed2a08-df0d-4ae1-aee0-c66ffb783a34.80ba72da-abfb-4af6-81f2-a443d12fb870&f=1&nofb=1&ipt=a20bb44db4478e4619bde6cf9911f6d4bb5d61d92d81c483f033922ffd265163','Open world RPG adventure','2026-03-21 18:26:25','2026-03-23 12:50:54',NULL,2,3,300,NULL,NULL,0),(4,'deadlock','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn-strapi.deadlock.coach%2Fdeadlock_pc_game_steam_cover_4467759ec6.jpg&f=1&nofb=1&ipt=7b4f905110218438917e93bf5ec57c8f88255fca7d182c5d8911bcca7b01f72d','FPS spel för åldrar 12+','2026-03-21 19:55:20','2026-03-25 10:02:20',NULL,1,4,100,NULL,NULL,0),(5,'FiFA 26','Klar',NULL,'https://www.fifaultimateteam.it/wp-content/uploads/2025/08/Cover-Bellingham-Musiala-Standard-EA-FC-26.webp','Fotbollspel för åldrar 8+','2026-03-22 09:34:56','2026-03-25 10:02:06',1,2,2,200,NULL,NULL,0),(7,'Valorant','Spelar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.--01k4rNVih9Tc7fG8xl9wHaEK%3Fpid%3DApi&f=1&ipt=453482b3e8eeb690438d24c42470695fb1257cc81ae2ac16862d50f55d108edb&ipo=images','FPS spel för åldrar 12+','2026-03-22 16:59:41','2026-03-25 10:06:12',NULL,1,4,300,NULL,NULL,0),(8,'NHL 26','Planerar',NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.NRWIAeJkaZAvp1owqAEM1QHaLH%3Fpid%3DApi&f=1&ipt=91e83b860399c10e9f85ca546d0265d154a5e6dc18e510f41c0daa589572554b&ipo=images','Hockey sport spel för både unga och vuxna ','2026-03-23 15:03:41','2026-03-25 10:00:33',NULL,2,2,500,NULL,48,1),(12,'Counter strike 2',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.CXssb09l_NROwY3iGXyFqQHaEK%3Fpid%3DApi&f=1&ipt=15832ed42d7bed3e6a53762faa101bab45e08141d3a81c8b4656a3feb69e0eb9&ipo=images','FPS spel för åldrar 18+','2026-03-23 20:45:29','2026-03-25 10:00:14',NULL,1,4,200,NULL,NULL,0),(13,'Among us ',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.mdxkBtY_smSWmzh7CJ-DHAHaEK%3Fpid%3DApi&f=1&ipt=c227b7c3138590cd9a420f2c3f146b90d7a40e442bc87ae1d43c426ff110e287&ipo=images','stratagy och rollspel för åldrar 10+','2026-03-23 20:49:18','2026-03-25 09:58:57',NULL,1,6,275,NULL,NULL,0),(14,'liar\'s Bar',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.explicit.bing.net%2Fth%2Fid%2FOIP.iaYBxOh0fQ94zS6pAu1RBQHaLH%3Fpid%3DApi&f=1&ipt=6d0e188551b578ad0bc49256b4c9a6c4f3b5d2d7928a414525b7bac978672ee2&ipo=images','Strategi spel för åldrar 15+','2026-03-23 20:51:55','2026-03-25 09:59:40',NULL,1,6,150,NULL,NULL,0),(15,'Minecraft',NULL,NULL,'https://dopest.se/_next/image/?url=https%3A%2F%2Fwp.dopest.se%2Fwp-content%2Fuploads%2F2024%2F05%2Fminecraft-history-first-version-ever-timeline-scaled.jpeg&w=3840&q=75','Minecraft för unga och gammla','2026-03-23 21:36:23','2026-03-25 09:55:49',NULL,1,5,300,NULL,50,1),(17,'Elden Ring',NULL,NULL,'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic0.gamerantimages.com%2Fwordpress%2Fwp-content%2Fuploads%2F2023%2F05%2Felden-ring-vyke-cover-1.jpg&f=1&nofb=1&ipt=ca2fad115e699a0a804ec9d558e48388f3b2cf704ae6ab3bb4e2cca8bb591bf3','Fantasy action RPG','2026-03-25 10:04:56','2026-03-25 10:04:56',NULL,2,3,700,NULL,80,1);
 /*!40000 ALTER TABLE `games` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -367,13 +371,14 @@ CREATE TABLE `ratings` (
   CONSTRAINT `ratings_ibfk_32` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_33` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_34` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ratings_ibfk_35` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_4` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_5` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_6` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_7` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_8` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `ratings_ibfk_9` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -382,7 +387,7 @@ CREATE TABLE `ratings` (
 
 LOCK TABLES `ratings` WRITE;
 /*!40000 ALTER TABLE `ratings` DISABLE KEYS */;
-INSERT INTO `ratings` VALUES (1,7,4,'2026-03-23 12:37:31','2026-03-23 12:37:31'),(2,3,5,'2026-03-23 12:56:39','2026-03-23 12:56:39'),(3,12,3,'2026-03-23 20:45:40','2026-03-23 20:45:40'),(4,15,4,'2026-03-24 22:14:03','2026-03-24 22:14:03'),(5,15,4,'2026-03-24 22:14:10','2026-03-24 22:14:10'),(6,15,1,'2026-03-24 22:14:14','2026-03-24 22:14:14'),(7,15,5,'2026-03-24 22:14:16','2026-03-24 22:14:16');
+INSERT INTO `ratings` VALUES (1,7,4,'2026-03-23 12:37:31','2026-03-23 12:37:31'),(3,12,3,'2026-03-23 20:45:40','2026-03-23 20:45:40'),(4,15,4,'2026-03-24 22:14:03','2026-03-24 22:14:03'),(5,15,4,'2026-03-24 22:14:10','2026-03-24 22:14:10'),(6,15,1,'2026-03-24 22:14:14','2026-03-24 22:14:14'),(7,15,5,'2026-03-24 22:14:16','2026-03-24 22:14:16'),(8,4,4,'2026-03-25 10:02:25','2026-03-25 10:02:25'),(9,17,5,'2026-03-25 10:05:09','2026-03-25 10:05:09');
 /*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -437,12 +442,13 @@ CREATE TABLE `reviews` (
   CONSTRAINT `reviews_ibfk_38` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reviews_ibfk_39` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reviews_ibfk_4` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reviews_ibfk_40` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reviews_ibfk_5` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reviews_ibfk_6` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reviews_ibfk_7` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reviews_ibfk_8` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reviews_ibfk_9` FOREIGN KEY (`gameId`) REFERENCES `games` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -451,7 +457,7 @@ CREATE TABLE `reviews` (
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-INSERT INTO `reviews` VALUES (1,7,'valo recension av samuel','Amen deh├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝├ö├▓├ÿÔö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£┬¬Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«Ôö£├ÂÔö£├éÔö¼ÔòØ├ö├Â┬ú├ö├▓├ªÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£ÔòúÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├ªr ├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝├ö├▓├ÿÔö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£┬¬Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«Ôö£├ÂÔö£├éÔö¼ÔòØ├ö├Â┬ú├ö├▓├ªÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£ÔòúÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├ªr bra ',4,'2026-03-22 17:00:18','2026-03-22 17:00:18'),(3,3,'B├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝├ö├▓├ÿÔö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£┬¬Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«Ôö£├ÂÔö£├éÔö¼ÔòØ├','wow detta spel ├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝├ö├▓├ÿÔö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£┬¬Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«Ôö£├ÂÔö£├éÔö¼ÔòØ├ö├Â┬ú├ö├▓├ªÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£ÔòúÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├ªr s├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö¼┬½├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝├ö├▓├ÿÔö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£┬¬Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£├®Ôö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬«Ôö£├ÂÔö£├éÔö¼ÔòØ├ö├Â┬ú├ö├▓├ª├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼ÔòØ├ö├Â┬╝Ôö¼ÔòØ kul wihooo',5,'2026-03-23 12:57:25','2026-03-23 12:57:25'),(4,15,'Samuel','Roligt spel',3,'2026-03-24 17:51:16','2026-03-24 17:51:16');
+INSERT INTO `reviews` VALUES (4,15,'Samuel','Roligt spel',3,'2026-03-24 17:51:16','2026-03-24 17:51:16'),(5,7,'Årets spel??','Wow detta spel är otroligt bra',5,'2026-03-25 10:01:45','2026-03-25 10:01:45'),(6,17,'Årets spel helt klart','Wow detta är 100% bästa spelet jag har kört någonsin',5,'2026-03-25 10:05:34','2026-03-25 10:05:34');
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -532,7 +538,8 @@ CREATE TABLE `users` (
   UNIQUE KEY `email_32` (`email`),
   UNIQUE KEY `email_33` (`email`),
   UNIQUE KEY `email_34` (`email`),
-  UNIQUE KEY `email_35` (`email`)
+  UNIQUE KEY `email_35` (`email`),
+  UNIQUE KEY `email_36` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -542,7 +549,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Samuel','Efternamn','samuel@mail.com','2026-03-23 12:28:54','2026-03-23 12:28:54'),(2,'Joachim','Karlsson','Joachim.karlsson@gmail.com','2026-03-23 20:31:12','2026-03-23 20:31:12'),(3,'Olle','├ö├Â┬úÔö£├é├ö├Â┬úÔö£├®├ö├Â┬╝Ôö£ÔòæÔö£├ÂÔö£├éÔö¼├║Ôö£├ÂÔö£ÔûôÔö£Ôòústerdhal','olle.ost@gamil.com','2026-03-23 20:31:41','2026-03-23 20:31:41'),(4,'Hannah','Karlsson','hannah.karlsson01@gmai.com','2026-03-23 20:32:23','2026-03-23 20:32:23'),(5,'William','hedrum','william.hedpung@gmail.com','2026-03-23 20:32:56','2026-03-23 20:32:56');
+INSERT INTO `users` VALUES (1,'Samuel','Karlsson','samuel@mail.com','2026-03-23 12:28:54','2026-03-25 09:54:08'),(2,'Joachim','Karlsson','Joachim.karlsson@gmail.com','2026-03-23 20:31:12','2026-03-23 20:31:12'),(3,'Olle','Österdahl','olle.ost@gamil.com','2026-03-23 20:31:41','2026-03-25 09:53:22'),(4,'Hannah','Karlsson','hannah.karlsson01@gmai.com','2026-03-23 20:32:23','2026-03-23 20:32:23'),(5,'William','hedrum','william.hedpung@gmail.com','2026-03-23 20:32:56','2026-03-23 20:32:56');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -555,4 +562,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-25 10:39:16
+-- Dump completed on 2026-03-25 11:09:36
