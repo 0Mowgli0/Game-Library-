@@ -133,6 +133,9 @@ Exportera databasen genom att stå i **projektets rotmapp**.
 ```bash
 mysqldump --default-character-set=utf8mb4 -u root -p game_library | Out-File -Encoding utf8 game_library.sql
 
+mysqldump --default-character-set=utf8mb4 -u root -p game_library | Out-File -Encoding utf8NoBOM game_library.sql
+
+mysqldump --default-character-set=utf8mb4 -u root -p game_library | ForEach-Object { $_ } | Set-Content -Encoding UTF8 game_library.sql
 ```
 - OBS!!! Om `mysql` inte känns igen i PowerShell, lägg till MySQL i PATH:
 ```bash
