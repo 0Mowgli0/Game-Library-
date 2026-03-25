@@ -15,7 +15,7 @@ import gameService from "../services/gameService";
 import { Link, useNavigate } from "react-router-dom";
 import { useSnackbar } from "../context/SnackbarContext";
 import { useCart } from "../context/CartContext";
-import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 function CartPage() {
@@ -28,7 +28,7 @@ function CartPage() {
   const [recommendations, setRecommendations] = useState([]);
   const { showSnackbar } = useSnackbar();
   const { fetchCartCount } = useCart();
-  const { currentUser } = useUser();
+  const { authUser } = useAuth();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const navigate = useNavigate();
@@ -41,9 +41,12 @@ function CartPage() {
 
   useEffect(() => {
     const fetchCart = async () => {
-      if (!currentUser) return;
+      if (!authUser) {
+        setLoading(false);
+        return;
+      }
       try {
-        const res = await gameService.getCart(currentUser.id);
+        const res = await gameService.getCart(authUser.id);
         setCart(res.data);
       } catch (err) {
         console.error("Kunde inte hämta varukorg", err);
@@ -52,24 +55,24 @@ function CartPage() {
       }
     };
     fetchCart();
-  }, [currentUser]);
+  }, [authUser]);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
-      if (!currentUser) return;
+      if (!authUser) return;
       try {
-        const res = await gameService.getRecommendations(currentUser.id);
+        const res = await gameService.getRecommendations(authUser.id);
         setRecommendations(res.data);
       } catch (err) {
         console.error("Kunde inte hämta rekommendationer", err);
       }
     };
     fetchRecommendations();
-  }, [cart, currentUser]);
+  }, [cart, authUser]);
 
   const handleRemove = async (gameId) => {
     try {
-      const res = await gameService.removeFromCart(currentUser.id, gameId);
+      const res = await gameService.removeFromCart(authUser.id, gameId);
       setCart(res.data);
       fetchCartCount();
       showSnackbar("Spel borttaget från varukorgen", "info");
@@ -81,8 +84,8 @@ function CartPage() {
   const handleUpdateAmount = async (gameId, newAmount) => {
     if (newAmount < 1) return;
     try {
-      await gameService.removeFromCart(currentUser.id, gameId);
-      const res = await gameService.addToCart(currentUser.id, gameId, newAmount);
+      await gameService.removeFromCart(authUser.id, gameId);
+      const res = await gameService.addToCart(authUser.id, gameId, newAmount);
       setCart(res.data);
       fetchCartCount();
     } catch (err) {
@@ -92,7 +95,7 @@ function CartPage() {
 
   const handleClear = async () => {
     try {
-      await gameService.clearCart(currentUser.id);
+      await gameService.clearCart(authUser.id);
       setCart({ games: [], total: 0 });
       setAppliedDiscount(null);
       setDiscountCode("");
@@ -127,7 +130,7 @@ function CartPage() {
   const handlePay = async () => {
     setPaying(true);
     try {
-      const res = await gameService.payCart(currentUser.id);
+      const res = await gameService.payCart(authUser.id);
       const orderWithDiscount = {
         ...res.data,
         total: discountedTotal,
@@ -161,6 +164,53 @@ function CartPage() {
 
   if (loading) return <PageContainer><Loading /></PageContainer>;
 
+  // Inte inloggad
+  if (!authUser) {
+    return (
+      <PageContainer>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 8,
+            textAlign: "center",
+            borderRadius: "20px",
+            background: isDark
+              ? "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)"
+              : "linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%)",
+            border: isDark
+              ? "1px solid rgba(255,255,255,0.07)"
+              : "1px solid rgba(0,0,0,0.07)",
+          }}
+        >
+          <ShoppingCartIcon sx={{ fontSize: 80, color: isDark ? "#2a475e" : "#c0cfe0", mb: 2 }} />
+          <Typography variant="h5" sx={{ color: theme.palette.text.primary, fontWeight: 800, mb: 1 }}>
+            Du är inte inloggad
+          </Typography>
+          <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 4 }}>
+            Logga in för att se din varukorg!
+          </Typography>
+          <Button
+            component={Link}
+            to="/login"
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: "#66c0f4",
+              color: "#0b1a24",
+              fontWeight: 800,
+              px: 4,
+              py: 1.5,
+              borderRadius: "12px",
+              "&:hover": { backgroundColor: "#8fd7ff" },
+            }}
+          >
+            Logga in
+          </Button>
+        </Paper>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <motion.div
@@ -172,11 +222,9 @@ function CartPage() {
           <Typography variant="h4" sx={{ fontWeight: 900, color: theme.palette.text.primary }}>
             Varukorg
           </Typography>
-          {currentUser && (
-            <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-              Inloggad som: <strong style={{ color: "#66c0f4" }}>{currentUser.firstName} {currentUser.lastName}</strong>
-            </Typography>
-          )}
+          <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+            Inloggad som: <strong style={{ color: "#66c0f4" }}>{authUser.firstName} {authUser.lastName}</strong>
+          </Typography>
         </Stack>
       </motion.div>
 
@@ -209,14 +257,12 @@ function CartPage() {
               >
                 <ShoppingCartIcon sx={{ fontSize: 80, color: isDark ? "#2a475e" : "#c0cfe0", mb: 2 }} />
               </motion.div>
-
               <Typography variant="h5" sx={{ color: theme.palette.text.primary, fontWeight: 800, mb: 1 }}>
                 Din varukorg är tom
               </Typography>
               <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 4, maxWidth: 400, mx: "auto" }}>
-                Det verkar som att du inte har lagt till några spel ännu. Utforska vår butik och hitta ditt nästa favoritspel!
+                Utforska vår butik och hitta ditt nästa favoritspel!
               </Typography>
-
               <Stack direction="row" spacing={2} justifyContent="center">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
@@ -458,7 +504,6 @@ function CartPage() {
                   <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
                     Totalt ({cart.games.reduce((acc, g) => acc + g.amount, 0)} st)
                   </Typography>
-
                   {appliedDiscount && (
                     <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
                       <Typography
@@ -479,11 +524,9 @@ function CartPage() {
                       />
                     </Stack>
                   )}
-
                   <Typography variant="h5" sx={{ fontWeight: 900, color: "#57cc99", mb: 2 }}>
                     {discountedTotal} kr
                   </Typography>
-
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                     <Button
                       variant="contained"
@@ -579,8 +622,8 @@ function CartPage() {
                             startIcon={<ShoppingCartIcon />}
                             onClick={async () => {
                               try {
-                                await gameService.addToCart(currentUser.id, game.id, 1);
-                                const res = await gameService.getCart(currentUser.id);
+                                await gameService.addToCart(authUser.id, game.id, 1);
+                                const res = await gameService.getCart(authUser.id);
                                 setCart(res.data);
                                 fetchCartCount();
                                 showSnackbar(`${game.title} lades till i varukorgen!`);

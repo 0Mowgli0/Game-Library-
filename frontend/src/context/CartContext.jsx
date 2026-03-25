@@ -1,18 +1,19 @@
-// CartContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import gameService from "../services/gameService";
 
 const CartContext = createContext();
 
-export function CartProvider({ children }) {
+export function CartProvider({ children, userId }) {
   const [cartCount, setCartCount] = useState(0);
-  const [currentUserId, setCurrentUserId] = useState(null);
 
-  const fetchCartCount = async (userId) => {
-    const id = userId || currentUserId;
-    if (!id) return;
+  const fetchCartCount = async (id) => {
+    const resolvedId = id || userId;
+    if (!resolvedId) {
+      setCartCount(0);
+      return;
+    }
     try {
-      const res = await gameService.getCart(id);
+      const res = await gameService.getCart(resolvedId);
       const count = res.data.games?.reduce((acc, g) => acc + g.amount, 0) || 0;
       setCartCount(count);
     } catch (err) {
@@ -20,13 +21,16 @@ export function CartProvider({ children }) {
     }
   };
 
-  const updateUser = (userId) => {
-    setCurrentUserId(userId);
-    fetchCartCount(userId);
-  };
+  useEffect(() => {
+    if (userId) {
+      fetchCartCount(userId);
+    } else {
+      setCartCount(0);
+    }
+  }, [userId]);
 
   return (
-    <CartContext.Provider value={{ cartCount, fetchCartCount, updateUser }}>
+    <CartContext.Provider value={{ cartCount, fetchCartCount }}>
       {children}
     </CartContext.Provider>
   );

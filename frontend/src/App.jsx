@@ -14,6 +14,8 @@ import OrdersPage from "./pages/OrdersPage";
 import SalePage from "./pages/SalePage";
 import ReviewsPage from "./pages/ReviewsPage";
 import InfoPage from "./pages/InfoPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
           <Route path="/sale" element={<SalePage />} />
           <Route path="/reviews" element={<ReviewsPage />} />
           <Route path="/info" element={<InfoPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>

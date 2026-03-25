@@ -1,14 +1,6 @@
-// GameCard.jsx
 import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Button,
-  Stack,
-  Chip,
-  Box,
-  useTheme,
+  Card, CardContent, CardMedia, Typography, Button,
+  Stack, Chip, Box, useTheme,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -17,12 +9,12 @@ import { motion } from "framer-motion";
 import gameService from "../../services/gameService";
 import { useSnackbar } from "../../context/SnackbarContext";
 import { useCart } from "../../context/CartContext";
-import { useUser } from "../../context/UserContext";
+import { useAuth } from "../../context/AuthContext";
 
 function GameCard({ game }) {
   const { showSnackbar } = useSnackbar();
   const { fetchCartCount } = useCart();
-  const { currentUser } = useUser();
+  const { authUser } = useAuth();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
 
@@ -31,12 +23,12 @@ function GameCard({ game }) {
     : null;
 
   const handleAddToCart = async () => {
-    if (!currentUser) {
-      showSnackbar("Välj en användare först!", "warning");
+    if (!authUser) {
+      showSnackbar("Du måste logga in för att köpa!", "warning");
       return;
     }
     try {
-      await gameService.addToCart(currentUser.id, game.id, 1);
+      await gameService.addToCart(authUser.id, game.id, 1);
       showSnackbar(`${game.title} lades till i varukorgen!`);
       fetchCartCount();
     } catch (err) {
@@ -77,7 +69,6 @@ function GameCard({ game }) {
           },
         }}
       >
-        {/* Bild med REA-badge */}
         <Box sx={{ overflow: "hidden", position: "relative" }}>
           <CardMedia
             component="img"
@@ -149,10 +140,7 @@ function GameCard({ game }) {
                   <Stack direction="row" alignItems="center" spacing={1}>
                     <Typography
                       variant="body1"
-                      sx={{
-                        color: theme.palette.text.secondary,
-                        textDecoration: "line-through",
-                      }}
+                      sx={{ color: theme.palette.text.secondary, textDecoration: "line-through" }}
                     >
                       {game.price} kr
                     </Typography>

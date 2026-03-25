@@ -7,9 +7,10 @@ import PageContainer from "../components/layout/PageContainer";
 import Loading from "../components/common/Loading";
 import Breadcrumbs from "../components/common/Breadcrumbs";
 import gameService from "../services/gameService";
-import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
+import LoginIcon from "@mui/icons-material/Login";
 import { Link } from "react-router-dom";
 
 const ORDERS_PER_PAGE = 4;
@@ -18,7 +19,7 @@ function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const { currentUser } = useUser();
+  const { authUser } = useAuth();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
 
@@ -30,9 +31,12 @@ function OrdersPage() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      if (!currentUser) return;
+      if (!authUser) {
+        setLoading(false);
+        return;
+      }
       try {
-        const res = await gameService.getOrderHistory(currentUser.id);
+        const res = await gameService.getOrderHistory(authUser.id);
         setOrders(res.data);
       } catch (err) {
         console.error("Kunde inte hämta orderhistorik", err);
@@ -41,9 +45,57 @@ function OrdersPage() {
       }
     };
     fetchOrders();
-  }, [currentUser]);
+  }, [authUser]);
 
   if (loading) return <PageContainer><Loading /></PageContainer>;
+
+  // Inte inloggad
+  if (!authUser) {
+    return (
+      <PageContainer>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 8,
+            textAlign: "center",
+            borderRadius: "20px",
+            background: isDark
+              ? "linear-gradient(180deg, #1f2f3d 0%, #16202d 100%)"
+              : "linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%)",
+            border: isDark
+              ? "1px solid rgba(255,255,255,0.07)"
+              : "1px solid rgba(0,0,0,0.07)",
+          }}
+        >
+          <ReceiptIcon sx={{ fontSize: 80, color: isDark ? "#2a475e" : "#c0cfe0", mb: 2 }} />
+          <Typography variant="h5" sx={{ color: theme.palette.text.primary, fontWeight: 800, mb: 1 }}>
+            Du är inte inloggad
+          </Typography>
+          <Typography variant="body1" sx={{ color: theme.palette.text.secondary, mb: 4 }}>
+            Logga in för att se dina ordrar!
+          </Typography>
+          <Button
+            component={Link}
+            to="/login"
+            variant="contained"
+            size="large"
+            startIcon={<LoginIcon />}
+            sx={{
+              backgroundColor: "#66c0f4",
+              color: "#0b1a24",
+              fontWeight: 800,
+              px: 4,
+              py: 1.5,
+              borderRadius: "12px",
+              "&:hover": { backgroundColor: "#8fd7ff" },
+            }}
+          >
+            Logga in
+          </Button>
+        </Paper>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -65,11 +117,9 @@ function OrdersPage() {
             </Typography>
           )}
         </Box>
-        {currentUser && (
-          <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-            Inloggad som: <strong style={{ color: "#66c0f4" }}>{currentUser.firstName} {currentUser.lastName}</strong>
-          </Typography>
-        )}
+        <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+          Inloggad som: <strong style={{ color: "#66c0f4" }}>{authUser.firstName} {authUser.lastName}</strong>
+        </Typography>
       </Stack>
 
       {orders.length === 0 ? (
@@ -147,7 +197,6 @@ function OrdersPage() {
                       : "1px solid rgba(0,0,0,0.07)",
                   }}
                 >
-                  {/* Order header */}
                   <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
                     <Box>
                       <Typography variant="h6" sx={{ fontWeight: 800, color: theme.palette.text.primary }}>
@@ -176,7 +225,6 @@ function OrdersPage() {
 
                   <Divider sx={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)", mb: 3 }} />
 
-                  {/* Spel i ordern */}
                   <Stack spacing={2} sx={{ mb: 3 }}>
                     {order.games.map((game) => (
                       <Stack
@@ -191,12 +239,7 @@ function OrdersPage() {
                             component="img"
                             src={game.image || "https://placehold.co/60x60?text=Game"}
                             alt={game.title}
-                            sx={{
-                              width: 60,
-                              height: 60,
-                              objectFit: "cover",
-                              borderRadius: "8px",
-                            }}
+                            sx={{ width: 60, height: 60, objectFit: "cover", borderRadius: "8px" }}
                           />
                           <Box>
                             <Typography sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
@@ -216,7 +259,6 @@ function OrdersPage() {
 
                   <Divider sx={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)", mb: 2 }} />
 
-                  {/* Totalt */}
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
                       {order.games.reduce((acc, g) => acc + g.amount, 0)} st spel
@@ -230,7 +272,6 @@ function OrdersPage() {
             ))}
           </Stack>
 
-          {/* Paginering */}
           {totalPages > 1 && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
               <Pagination
@@ -243,9 +284,7 @@ function OrdersPage() {
                 sx={{
                   "& .MuiPaginationItem-root": {
                     color: theme.palette.text.secondary,
-                    border: isDark
-                      ? "1px solid rgba(255,255,255,0.1)"
-                      : "1px solid rgba(0,0,0,0.1)",
+                    border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "8px",
                   },
                   "& .MuiPaginationItem-root.Mui-selected": {

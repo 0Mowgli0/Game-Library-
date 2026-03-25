@@ -84,6 +84,11 @@ Installera dotenv:
 npm install dotenv
 ```
 
+Installera bcrypt:
+```bash
+npm install bcrypt jsonwebtoken cookie-parser
+```
+
 Starta backend:
 ```bash
 npm run dev
@@ -111,9 +116,7 @@ installera detta kommando för animationer:
 npm install framer-motion
 ```
 ```
-
 ```
-
 Starta frontend:
 ```bash
 npm run dev

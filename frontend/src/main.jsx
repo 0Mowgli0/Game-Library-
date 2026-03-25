@@ -1,23 +1,22 @@
-// main.jsx
-import { StrictMode, useRef } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { SnackbarProvider } from "./context/SnackbarContext";
-import { CartProvider, useCart } from "./context/CartContext";
+import { CartProvider } from "./context/CartContext";
 import { ThemeProviderWrapper } from "./context/ThemeContext";
-import { UserProvider } from "./context/UserContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import "./index.css";
 import App from "./App.jsx";
 
 function AppWithProviders() {
-  const { updateUser } = useCart();
+  const { authUser } = useAuth();
 
   return (
-    <UserProvider onUserChange={updateUser}>
+    <CartProvider userId={authUser?.id}>
       <SnackbarProvider>
         <App />
       </SnackbarProvider>
-    </UserProvider>
+    </CartProvider>
   );
 }
 
@@ -25,9 +24,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProviderWrapper>
-        <CartProvider>
+        <AuthProvider>
           <AppWithProviders />
-        </CartProvider>
+        </AuthProvider>
       </ThemeProviderWrapper>
     </BrowserRouter>
   </StrictMode>

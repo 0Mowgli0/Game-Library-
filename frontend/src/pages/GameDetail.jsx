@@ -1,4 +1,3 @@
-// GameDetail.jsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -14,13 +13,13 @@ import Breadcrumbs from "../components/common/Breadcrumbs";
 import gameService from "../services/gameService";
 import { useSnackbar } from "../context/SnackbarContext";
 import { useCart } from "../context/CartContext";
-import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 
 function GameDetail() {
   const { id } = useParams();
   const { showSnackbar } = useSnackbar();
   const { fetchCartCount } = useCart();
-  const { currentUser } = useUser();
+  const { authUser } = useAuth();
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
   const [game, setGame] = useState(null);
@@ -53,12 +52,12 @@ function GameDetail() {
   }, [id]);
 
   const handleAddToCart = async () => {
-    if (!currentUser) {
-      showSnackbar("Välj en användare först!", "warning");
+    if (!authUser) {
+      showSnackbar("Du måste logga in för att köpa!", "warning");
       return;
     }
     try {
-      await gameService.addToCart(currentUser.id, game.id, quantity);
+      await gameService.addToCart(authUser.id, game.id, quantity);
       showSnackbar(`${quantity} st ${game.title} lades till i varukorgen!`);
       fetchCartCount();
     } catch (err) {
@@ -150,7 +149,6 @@ function GameDetail() {
             : "0 12px 28px rgba(0,0,0,0.08)",
         }}
       >
-        {/* Bild med REA-badge */}
         <Box sx={{ position: "relative", mb: 3 }}>
           <Box
             component="img"
@@ -195,11 +193,11 @@ function GameDetail() {
 
         <Stack direction="row" spacing={1} sx={{ mb: 3, flexWrap: "wrap" }}>
           <Chip
-            label={game.Genre?.name || game.genre || "Okänd genre"}
+            label={game.Genre?.name || "Okänd genre"}
             sx={{ backgroundColor: "#66c0f4", color: "#0b1a24", fontWeight: 700 }}
           />
           <Chip
-            label={game.Platform?.name || game.platform || "Okänd plattform"}
+            label={game.Platform?.name || "Okänd plattform"}
             sx={{
               backgroundColor: isDark ? "#2a475e" : "#e0eaf5",
               color: theme.palette.text.secondary,
@@ -214,7 +212,6 @@ function GameDetail() {
           )}
         </Stack>
 
-        {/* Pris */}
         {game.price && (
           <Box sx={{ mb: 3 }}>
             {game.onSale && salePrice ? (
@@ -241,7 +238,6 @@ function GameDetail() {
           </Box>
         )}
 
-        {/* Snittbetyg */}
         <Box sx={{ mb: 3 }}>
           <Typography sx={{ color: theme.palette.text.secondary, mb: 0.5 }}>
             Snittbetyg ({ratings.length} betyg)
@@ -262,7 +258,6 @@ function GameDetail() {
           </Stack>
         </Box>
 
-        {/* Sätt betyg */}
         <Box sx={{ mb: 3 }}>
           <Typography sx={{ color: theme.palette.text.secondary, mb: 0.5 }}>Sätt ditt betyg</Typography>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -300,7 +295,6 @@ function GameDetail() {
           {game.description || "Ingen beskrivning tillagd."}
         </Typography>
 
-        {/* Antal + Lägg i varukorg */}
         <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 5 }}>
           <TextField
             type="number"
@@ -354,7 +348,6 @@ function GameDetail() {
 
         <Divider sx={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", mb: 4 }} />
 
-        {/* Recensioner */}
         <Typography variant="h5" sx={{ fontWeight: 800, color: theme.palette.text.primary, mb: 3 }}>
           Recensioner
         </Typography>
@@ -398,7 +391,6 @@ function GameDetail() {
           ))
         )}
 
-        {/* Lägg till recension */}
         <Typography variant="h6" sx={{ fontWeight: 800, color: theme.palette.text.primary, mt: 4, mb: 2 }}>
           Lägg till recension
         </Typography>
